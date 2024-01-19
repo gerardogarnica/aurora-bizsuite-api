@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{CFA06E21-FA88-4D1E-9442-6277ADFAA1EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{7A512CD8-5192-4BDC-98D4-0D0CAC7CA467}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DD505021-126D-4DDB-A95B-1AB72108AAF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contacts", "Contacts", "{6F52D0F8-7C71-4C00-8826-D9192AA256F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurora.Business.Contacts.Domain", "Modules\Contacts\Aurora.Business.Contacts.Domain\Aurora.Business.Contacts.Domain.csproj", "{1263916B-EE4E-4659-A754-4BB86F47F86B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1263916B-EE4E-4659-A754-4BB86F47F86B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1263916B-EE4E-4659-A754-4BB86F47F86B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1263916B-EE4E-4659-A754-4BB86F47F86B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1263916B-EE4E-4659-A754-4BB86F47F86B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F52D0F8-7C71-4C00-8826-D9192AA256F2} = {7A512CD8-5192-4BDC-98D4-0D0CAC7CA467}
+		{1263916B-EE4E-4659-A754-4BB86F47F86B} = {6F52D0F8-7C71-4C00-8826-D9192AA256F2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E2CF316-AC66-47A6-9B33-A92B45240818}
+	EndGlobalSection
+EndGlobal
