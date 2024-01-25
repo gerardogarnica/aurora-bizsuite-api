@@ -1,41 +1,50 @@
 ﻿namespace Aurora.BizSuite.Settings.Domain.Options;
 
-public class Option : AuditableEntity<OptionId>
+public class Option : AuditableEntity<OptionId>, IAggregateRoot
 {
-    private Option(string code, string name, string? description, bool isVisible, bool isEditable)
+    public string Code { get; private set; }
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
+    public OptionType Type { get; private set; }
+    public IList<OptionItem> Items { get; private set; } = new List<OptionItem>();
+
+    protected Option() : base(new OptionId(0))
+    {
+        Code = string.Empty;
+        Name = string.Empty;
+        Type = OptionType.System;
+    }
+
+    private Option(string code, string name, string? description, OptionType type)
         : base(new OptionId(0))
     {
         Code = code;
         Name = name.Trim();
         Description = description?.Trim();
-        IsVisible = isVisible;
-        IsEditable = isEditable;
+        Type = type;
     }
 
-    public string Code { get; private set; }
-    public string Name { get; private set; }
-    public string? Description { get; private set; }
-    public bool IsVisible { get; private set; }
-    public bool IsEditable { get; private set; }
-    public IList<OptionItem> Items { get; private set; } = new List<OptionItem>();
-
-    public static Option Create(string code, string name, string? description, bool isVisible, bool isEditable)
+    public static Option Create(string code, string name, string? description, OptionType type)
     {
-        return new Option(code, name, description, isVisible, isEditable);
+        return new Option(code, name, description, type);
     }
 
-    public Option Update(string name, string? description, bool isVisible, bool isEditable)
+    public Option Update(string name, string? description)
     {
+        if (Type == OptionType.System)
+            throw new Exception("System option cannot be updated.");
+
         Name = name.Trim();
         Description = description?.Trim();
-        IsVisible = isVisible;
-        IsEditable = isEditable;
 
         return this;
     }
 
     public void AddItem(string code, string? description)
     {
+        if (Items.Any(x => x.Code == code))
+            throw new Exception("Existing code.");
+        //throw new OptionItemAlreadyExistsException(code, Code);
         Items.Add(new OptionItem(Id, code, description));
     }
 
