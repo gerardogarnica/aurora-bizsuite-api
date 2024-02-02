@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Aurora.Framework.Behavior\Aurora.Framework.Behavior.csproj" />
+    <ProjectReference Include="..\Aurora.BizSuite.Settings.Domain\Aurora.BizSuite.Settings.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
