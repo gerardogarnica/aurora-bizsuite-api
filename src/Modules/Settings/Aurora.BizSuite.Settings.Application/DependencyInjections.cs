@@ -1,6 +1,28 @@
-﻿namespace Aurora.BizSuite.Settings.Application;
+﻿using Aurora.Framework.Behavior;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
-public class DependencyInjections
+namespace Aurora.BizSuite.Settings.Application;
+
+public static class DependencyInjections
 {
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        var executingAssembly = Assembly.GetExecutingAssembly();
 
+        // FluentValidation
+        services.AddValidatorsFromAssembly(executingAssembly);
+
+        // MediatR
+        services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssembly(executingAssembly);
+            config.AddValidationBehavior();
+            config.AddTransactionBehavior();
+            config.AddPerformanceBehavior();
+            config.AddLoggingBehavior();
+        });
+
+        return services;
+    }
 }
