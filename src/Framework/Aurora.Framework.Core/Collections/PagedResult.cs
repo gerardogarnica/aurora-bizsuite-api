@@ -11,6 +11,11 @@ public class PagedResult<T> where T : class
     public bool HasPreviousPage => CurrentPage > 1;
     public bool HasNextPage => CurrentPage < TotalPages;
 
+    protected PagedResult()
+    {
+        Items = new List<T>();
+    }
+
     public PagedResult(List<T> items, int totalItems, int currentPage, int totalPages)
     {
         Items = items;
