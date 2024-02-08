@@ -1,6 +1,6 @@
 ﻿namespace Aurora.BizSuite.Settings.Domain.Options;
 
-public class Option : AuditableEntity<OptionId>, IAggregateRoot
+public class Option : AggregateRoot<OptionId>
 {
     private readonly List<OptionItem> _items = [];
 
@@ -10,7 +10,7 @@ public class Option : AuditableEntity<OptionId>, IAggregateRoot
     public OptionType Type { get; private set; }
     public IReadOnlyList<OptionItem> Items => _items;
 
-    protected Option() : base(new OptionId(0))
+    protected Option()
     {
         Code = string.Empty;
         Name = string.Empty;
@@ -18,7 +18,6 @@ public class Option : AuditableEntity<OptionId>, IAggregateRoot
     }
 
     private Option(string code, string name, string? description, OptionType type)
-        : base(new OptionId(0))
     {
         Code = code;
         Name = name.Trim();
