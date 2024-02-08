@@ -10,10 +10,10 @@ internal class OptionConfiguration : IEntityTypeConfiguration<Option>
             .HasName("PK_Option");
 
         builder.Property(o => o.Id)
-            .UseHiLo("optionseq", SettingsContext.DEFAULT_SCHEMA)
             .HasColumnName("OptionId")
             .HasConversion(id => id.Value, value => new OptionId(value))
-            .IsRequired();
+            .IsRequired()
+            .ValueGeneratedOnAdd();
 
         builder.Property(o => o.Code)
             .IsRequired()
@@ -27,6 +27,7 @@ internal class OptionConfiguration : IEntityTypeConfiguration<Option>
             .HasMaxLength(200);
 
         builder.Property(o => o.Type)
+            .HasColumnType("tinyint")
             .IsRequired();
 
         builder.Property(o => o.CreatedBy)

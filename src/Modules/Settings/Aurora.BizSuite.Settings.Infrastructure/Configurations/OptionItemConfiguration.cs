@@ -10,10 +10,10 @@ class OptionItemConfiguration : IEntityTypeConfiguration<OptionItem>
             .HasName("PK_OptionItem");
 
         builder.Property(oi => oi.Id)
-            .UseHiLo("optionitemseq", SettingsContext.DEFAULT_SCHEMA)
             .HasConversion(id => id.Value, value => new OptionItemId(value))
             .HasColumnName("OptionItemId")
-            .IsRequired();
+            .IsRequired()
+            .ValueGeneratedOnAdd();
 
         builder.Property(oi => oi.OptionId)
             .HasColumnName("OptionId")
