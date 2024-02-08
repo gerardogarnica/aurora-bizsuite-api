@@ -2,7 +2,7 @@
 
 namespace Aurora.Framework;
 
-public interface IAggregateRoot
+public interface IAggregateRoot : IAuditableEntity
 {
     IReadOnlyCollection<BaseEvent> DomainEvents { get; }
 
@@ -10,7 +10,7 @@ public interface IAggregateRoot
     void RemoveDomainEvent(BaseEvent domainEvent);
 }
 
-public abstract class AggregateRoot<TId> : BaseEntity<TId>, IAggregateRoot
+public abstract class AggregateRoot<TId> : AuditableEntity<TId>, IAggregateRoot
 {
     protected AggregateRoot() { }
 
