@@ -2,14 +2,19 @@
 
 internal class OptionRepository : BaseRepository<Option, OptionId>, IOptionRepository
 {
-    public IUnitOfWork UnitOfWork => DbContext;
+    private readonly SettingsContext _context;
+
+    public IUnitOfWork UnitOfWork => _context;
 
     public OptionRepository(SettingsContext context)
-        : base(context) { }
+        : base(context)
+    {
+        _context = context;
+    }
 
     public async Task<Option?> GetOptionAsync(string code)
     {
-        return await DbContext
+        return await _context
             .Options
             .Where(x => x.Code == code)
             .Include(x => x.Items)
@@ -18,7 +23,7 @@ internal class OptionRepository : BaseRepository<Option, OptionId>, IOptionRepos
 
     public async Task<PagedResult<Option>> GetPagedOptionAsync(PagedViewRequest paged, string? searchCriteria)
     {
-        var query = DbContext
+        var query = _context
             .Options
             .AsQueryable();
 
