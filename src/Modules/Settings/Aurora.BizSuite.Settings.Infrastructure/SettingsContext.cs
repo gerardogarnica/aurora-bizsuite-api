@@ -31,7 +31,7 @@ public class SettingsContext : DbContext, IUnitOfWork
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var domainEvents = ChangeTracker
-            .Entries<IBaseEntity>()
+            .Entries<IAggregateRoot>()
             .Select(x => x.Entity)
             .Where(x => x.DomainEvents.Count != 0)
             .SelectMany(x =>

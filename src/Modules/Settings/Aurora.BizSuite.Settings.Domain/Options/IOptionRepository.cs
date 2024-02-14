@@ -2,7 +2,7 @@
 
 public interface IOptionRepository : IRepository<Option>
 {
-    Task InsertAsync(Option option);
+    Task<Option> InsertAsync(Option option);
     void Update(Option option);
     Task<Option?> GetOptionAsync(string code);
     Task<PagedResult<Option>> GetPagedOptionAsync(PagedViewRequest paged, string? searchCriteria);
