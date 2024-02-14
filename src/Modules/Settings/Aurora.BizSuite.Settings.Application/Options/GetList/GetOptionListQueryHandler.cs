@@ -16,14 +16,7 @@ public class GetOptionListQueryHandler : IRequestHandler<GetOptionListQuery, Pag
 
         // Return paged result
         return new PagedResult<OptionModel>(
-            options.Items.Select(
-                x => new OptionModel(
-                    x.Id.Value,
-                    x.Code,
-                    x.Name,
-                    x.Description,
-                    x.Equals(OptionType.User),
-                    [])).ToList(),
+            options.Items.Select(x => x.ToModel()).ToList(),
             options.TotalItems,
             options.CurrentPage,
             options.TotalPages);

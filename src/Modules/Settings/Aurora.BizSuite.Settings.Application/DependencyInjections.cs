@@ -18,7 +18,7 @@ public static class DependencyInjections
         {
             config.RegisterServicesFromAssembly(executingAssembly);
             config.AddValidationBehavior();
-            config.AddTransactionBehavior();
+            config.AddUnitOfWorkBehavior();
             config.AddPerformanceBehavior();
             config.AddLoggingBehavior();
         });

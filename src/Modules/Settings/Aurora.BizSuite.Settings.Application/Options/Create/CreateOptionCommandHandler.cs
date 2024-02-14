@@ -13,15 +13,9 @@ public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, O
     {
         var option = CreateOption(request);
 
-        await _optionRepository.InsertAsync(option);
+        option = await _optionRepository.InsertAsync(option);
 
-        return new OptionModel(
-            option.Id.Value,
-            option.Code,
-            option.Name,
-            option.Description,
-            option.Equals(OptionType.User),
-            []);
+        return option.ToModel();
     }
 
     private static Option CreateOption(CreateOptionCommand request)

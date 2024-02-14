@@ -16,16 +16,6 @@ public class GetOptionByCodeQueryHandler : IRequestHandler<GetOptionByCodeQuery,
         if (option == null) return null;
 
         // Return option model with items
-        return new OptionModel(
-            option.Id.Value,
-            option.Code,
-            option.Name,
-            option.Description,
-            option.Equals(OptionType.User),
-            option.Items.Select(x => new OptionItemModel(
-                x.Id.Value,
-                x.Code,
-                x.Description,
-                x.IsActive)).ToList());
+        return option.ToModel();
     }
 }
