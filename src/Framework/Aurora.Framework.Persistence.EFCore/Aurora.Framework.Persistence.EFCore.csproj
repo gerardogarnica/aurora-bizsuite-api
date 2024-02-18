@@ -7,11 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\Settings\Aurora.BizSuite.Settings.Domain\Aurora.BizSuite.Settings.Domain.csproj" />
+    <ProjectReference Include="..\Aurora.Framework.Core\Aurora.Framework.Core.csproj" />
   </ItemGroup>
 
 </Project>
