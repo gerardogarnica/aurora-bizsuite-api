@@ -14,7 +14,7 @@ public static class BaseEndpointsExtensions
             {
                 var instance = Activator.CreateInstance(x);
                 var addRoutes = x?.GetMethod("AddRoutes");
-                addRoutes?.Invoke(instance, new object[] { app });
+                addRoutes?.Invoke(instance, [app]);
             });
     }
 }
