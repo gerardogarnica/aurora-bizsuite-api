@@ -3,34 +3,32 @@ using Aurora.BizSuite.Settings.Application.Options.Create;
 using Aurora.BizSuite.Settings.Application.Options.GetByCode;
 using Aurora.BizSuite.Settings.Application.Options.GetList;
 using Aurora.BizSuite.Settings.Application.Options.Update;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Aurora.BizSuite.Settings.API.Endpoints;
 
-public class OptionsEndpoints : IBaseEndpoints
+public class OptionsEndpoint : IBaseEndpoint
 {
-    public void AddRoutes(WebApplication app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("aurora/bizsuite/options");
+        var group = app
+            .MapGroup("aurora/bizsuite/options")
+            .WithTags("Options")
+            .RequireAuthorization();
 
         group.MapGet("/{code}", GetByCode)
-            .WithName("GetOptionByCodeQuery")
-            .WithOpenApi();
+            .WithName("GetOptionByCodeQuery");
 
         group.MapGet("/", GetList)
-            .WithName("GetOptionList")
-            .WithOpenApi();
+            .WithName("GetOptionList");
 
         group.MapPost("/", Create)
-            .WithName("CreateOption")
-            .WithOpenApi();
+            .WithName("CreateOption");
 
         group.MapPut("/", Update)
-            .WithName("UpdateOption")
-            .WithOpenApi();
+            .WithName("UpdateOption");
     }
 
-    private async Task<Results<Ok<OptionModel>, NotFound>> GetByCode(
+    private async Task<Results<Ok<OptionModel>, NoContent>> GetByCode(
         string code,
         ISender sender)
     {
@@ -41,19 +39,19 @@ public class OptionsEndpoints : IBaseEndpoints
 
         return result != null
             ? TypedResults.Ok(result)
-            : TypedResults.NotFound();
+            : TypedResults.NoContent();
     }
 
     private async Task<Results<Ok<PagedResult<OptionModel>>, BadRequest>> GetList(
         [FromQuery] int page,
         [FromQuery] int pageSize,
-        [FromQuery] string? searchCriteria,
+        [FromQuery] string? searchTerms,
         ISender sender)
     {
         var result = await sender.Send(new GetOptionListQuery()
         {
             Paged = new PagedViewRequest(page, pageSize),
-            SearchCriteria = searchCriteria
+            SearchTerms = searchTerms
         });
 
         return TypedResults.Ok(result);

@@ -1,14 +1,20 @@
 using Aurora.BizSuite.Settings.Application;
 using Aurora.BizSuite.Settings.Infrastructure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddEndpoints();
+builder.Services.AddTransient<ExceptionHandlerMiddleware>();
+
+builder.Host.ConfigureSerilogToElasticsearch();
 
 var app = builder.Build();
 
@@ -21,6 +27,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.AddEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseSerilogRequestLogging();
+app.MapEndpoints();
 
 app.Run();
