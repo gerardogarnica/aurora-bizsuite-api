@@ -18,8 +18,6 @@ public static class AuthenticationService
             x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer();
 
-        services.AddScoped<IJwtProvider, JwtProvider>();
-
         services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         return services;
