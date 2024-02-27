@@ -10,9 +10,8 @@ public static class BaseEndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services)
     {
-        var assembly = Assembly.GetCallingAssembly();
-
-        var serviceDescriptor = assembly
+        var serviceDescriptor = Assembly
+            .GetCallingAssembly()
             .DefinedTypes
             .Where(x => x.IsAssignableTo(typeof(IBaseEndpoint)))
             .Select(type => ServiceDescriptor.Transient(typeof(IBaseEndpoint), type))
@@ -21,17 +20,6 @@ public static class BaseEndpointExtensions
         services.TryAddEnumerable(serviceDescriptor);
 
         return services;
-        /*
-        Assembly.GetCallingAssembly().GetTypes()
-            .Where(x => x.GetInterfaces().Contains(typeof(IBaseEndpoint)))
-            .ToList()
-            .ForEach(x =>
-            {
-                var instance = Activator.CreateInstance(x);
-                var addRoutes = x?.GetMethod("AddRoutes");
-                addRoutes?.Invoke(instance, [app]);
-            });
-        */
     }
 
     public static IApplicationBuilder MapEndpoints(
