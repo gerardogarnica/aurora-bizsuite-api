@@ -49,9 +49,4 @@ public class SettingsContext : DbContext, IUnitOfWork
 
         return result;
     }
-
-    public Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
 }
