@@ -2,6 +2,17 @@
 
 public static class DomainErrors
 {
+    public static class Password
+    {
+        public static BaseError PasswordNotNull => new(
+            "Password.NotNull",
+            "The password is required.");
+
+        public static BaseError PasswordTooShort => new(
+            "Password.TooShort",
+            "The password must be at least 8 characters long.");
+    }
+
     public static class RoleErrors
     {
         public static readonly BaseError RoleNotFound = new(
