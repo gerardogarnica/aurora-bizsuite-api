@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Aurora.Framework.Persistence.EFCore.Configuration;
+namespace Aurora.Framework.Persistence.EFCore;
 
 public static class EntityTypeExtensions
 {
