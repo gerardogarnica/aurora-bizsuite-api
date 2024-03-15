@@ -1,11 +1,16 @@
-﻿namespace Aurora.BizSuite.Security.Domain.Roles;
+﻿using Aurora.BizSuite.Security.Domain.Users;
+
+namespace Aurora.BizSuite.Security.Domain.Roles;
 
 public class Role : AggregateRoot<RoleId>
 {
+    private readonly List<UserRole> _users = [];
+
     public string Name { get; private set; }
     public string Description { get; private set; }
     public string? Notes { get; private set; }
     public bool IsActive { get; private set; }
+    public IReadOnlyCollection<UserRole> Users => _users.AsReadOnly();
 
     protected Role()
         : base(new RoleId(Guid.NewGuid()))
