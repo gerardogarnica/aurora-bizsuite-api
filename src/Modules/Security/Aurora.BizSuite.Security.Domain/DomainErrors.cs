@@ -42,6 +42,10 @@ public static class DomainErrors
             "Users.InvalidPassword",
             "The password is incorrect.");
 
+        public static readonly BaseError RoleAlreadyAssigned = new(
+            "Users.RoleAlreadyAssigned",
+            "Role already is assigned to the user.");
+
         public static readonly BaseError UserNotFound = new(
             "Users.NotFound",
             "User not found.");

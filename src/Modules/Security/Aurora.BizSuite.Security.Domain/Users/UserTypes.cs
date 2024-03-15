@@ -2,6 +2,8 @@
 
 public record UserId(Guid Value);
 
+public record UserRoleId(int Value);
+
 public enum UserStatusType
 {
     Pending = 0,
