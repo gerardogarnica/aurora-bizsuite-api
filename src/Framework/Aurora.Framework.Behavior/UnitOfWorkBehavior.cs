@@ -3,15 +3,16 @@ using System.Transactions;
 
 namespace Aurora.Framework.Behavior;
 
-public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull, IRequest<TResponse>
-    where TResponse : class
+public class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public UnitOfWorkBehavior(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
-
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         if (IsNotCommand()) return await next();
 
@@ -26,6 +27,7 @@ public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
     private static bool IsNotCommand()
     {
-        return !typeof(TRequest).Name.EndsWith("Command");
+        return typeof(TRequest).GetInterface("ICommand") is null
+            && typeof(TRequest).GetInterface("ICommand`1") is null;
     }
 }

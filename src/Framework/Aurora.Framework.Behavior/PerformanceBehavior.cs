@@ -4,21 +4,17 @@ using System.Diagnostics;
 
 namespace Aurora.Framework.Behavior;
 
-public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull, IRequest<TResponse>
-    where TResponse : class
+public class PerformanceBehavior<TRequest, TResponse>(ILogger<TRequest> logger)
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    private readonly Stopwatch _timer;
-    private readonly ILogger<TRequest> _logger;
+    private readonly Stopwatch _timer = new();
+    private readonly ILogger<TRequest> _logger = logger;
 
-    public PerformanceBehavior(
-        ILogger<TRequest> logger)
-    {
-        _timer = new Stopwatch();
-        _logger = logger;
-    }
-
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         _timer.Start();
 
@@ -30,7 +26,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         {
             var requestName = typeof(TRequest).Name;
 
-            _logger.LogWarning("Aurora Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}",
+            _logger.LogWarning("Aurora Soft long running request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}",
                 requestName, _timer.ElapsedMilliseconds, request);
         }
 
