@@ -2,27 +2,20 @@
 
 namespace Aurora.Framework.Persistence.EFCore;
 
-public abstract class BaseRepository<TEntity, TId>
+public abstract class BaseRepository<TEntity, TId>(DbContext context)
     where TEntity : AggregateRoot<TId>
     where TId : class
 {
-    private readonly DbContext _context;
-
-    protected BaseRepository(DbContext context)
-    {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+    private readonly DbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
     public virtual async Task<TEntity?> GetByIdAsync(TId id)
     {
         return await _context.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task<TEntity> InsertAsync(TEntity entity)
+    public async Task InsertAsync(TEntity entity)
     {
         await _context.Set<TEntity>().AddAsync(entity);
-
-        return entity;
     }
 
     public void Update(TEntity entity)
@@ -42,7 +35,7 @@ public abstract class BaseRepository<TEntity, TId>
             .Take(viewRequest.PageSize)
             .ToListAsync();
 
-        var currentPage = totalItems > 0 ? viewRequest.PageIndex + 1 : 0;
+        var currentPage = totalItems > 0 ? viewRequest.PageIndex : 0;
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)viewRequest.PageSize);
 

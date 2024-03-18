@@ -7,8 +7,6 @@ public class UserRole : AuditableEntity<UserRoleId>
     public UserId UserId { get; private set; }
     public RoleId RoleId { get; private set; }
     public bool IsEditable { get; private set; }
-    //public User User { get; private set; } = null!;
-    //public Role Role { get; private set; } = null!;
 
     protected UserRole()
     {
