@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Aurora.Framework;
+namespace Aurora.Framework.Application;
 
 public interface ICommand : IRequest<Result>;
 
