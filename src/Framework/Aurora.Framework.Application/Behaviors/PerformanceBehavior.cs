@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace Aurora.Framework.Behavior;
+namespace Aurora.Framework.Application;
 
 public class PerformanceBehavior<TRequest, TResponse>(ILogger<TRequest> logger)
     : IPipelineBehavior<TRequest, TResponse>

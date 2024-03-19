@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aurora.Framework.Behavior;
+namespace Aurora.Framework.Application;
 
 public static class BehaviorsConfiguration
 {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Aurora.Framework.Behavior;
+namespace Aurora.Framework.Application;
 
 public class ValidationException : Exception
 {

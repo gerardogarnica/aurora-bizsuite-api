@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Transactions;
 
-namespace Aurora.Framework.Behavior;
+namespace Aurora.Framework.Application;
 
 public class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
