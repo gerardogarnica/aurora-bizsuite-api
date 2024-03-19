@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\Aurora.Framework.Behavior\Aurora.Framework.Behavior.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Aurora.Framework.Application\Aurora.Framework.Application.csproj" />
     <ProjectReference Include="..\Aurora.BizSuite.Security.Domain\Aurora.BizSuite.Security.Domain.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,4 @@
-﻿using Aurora.Framework.Behavior;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Aurora.BizSuite.Security.Application;
