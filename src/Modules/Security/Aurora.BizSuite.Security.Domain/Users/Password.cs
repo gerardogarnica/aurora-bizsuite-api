@@ -2,7 +2,7 @@
 
 public sealed class Password : ValueObject
 {
-    private const int MinLength = 8;
+    private const int MinLength = 6;
 
     public string Value { get; }
 

@@ -3,7 +3,7 @@ using Aurora.Framework.Identity;
 
 namespace Aurora.BizSuite.Security.API.Endpoints;
 
-public class IdentityEndpoint : IBaseEndpoint
+public class IdentityEndpoints : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
