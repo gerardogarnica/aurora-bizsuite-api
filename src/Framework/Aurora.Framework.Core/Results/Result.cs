@@ -16,8 +16,6 @@ public class Result
 
     public bool IsSuccessful { get; }
 
-    public bool IsFailed => !IsSuccessful;
-
     public BaseError Error { get; }
 
     public static Result Ok() => new(true, BaseError.None);

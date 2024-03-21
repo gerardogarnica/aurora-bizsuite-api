@@ -6,6 +6,7 @@ namespace Aurora.Framework.Application;
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
+    where TResponse : Result
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
@@ -21,8 +22,11 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         var failures = results
             .Where(x => x.Errors.Count != 0)
             .SelectMany(x => x.Errors)
+            .Distinct()
             .ToList();
 
-        return failures.Count != 0 ? throw new ValidationException(failures) : await next();
+        if (failures.Count == 0) return await next();
+
+        throw new ValidationException(failures);
     }
 }
