@@ -4,7 +4,7 @@ public record UserId(Guid Value);
 
 public record UserRoleId(int Value);
 
-public enum UserStatusType
+public enum UserStatusType : byte
 {
     Pending = 0,
     Active = 1,
