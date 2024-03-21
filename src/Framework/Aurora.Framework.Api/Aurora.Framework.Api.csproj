@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aurora.Framework.Application\Aurora.Framework.Application.csproj" />
     <ProjectReference Include="..\Aurora.Framework.Identity\Aurora.Framework.Identity.csproj" />
   </ItemGroup>
 
