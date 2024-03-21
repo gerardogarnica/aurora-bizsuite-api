@@ -1,6 +1,6 @@
 ﻿namespace Aurora.BizSuite.Security.Application.Users.Create;
 
-public class CreateUserHandler(
+public class CreateUserCommandHandler(
     IPasswordProvider passwordProvider,
     IUserRepository userRepository)
     : ICommandHandler<CreateUserCommand, Guid>

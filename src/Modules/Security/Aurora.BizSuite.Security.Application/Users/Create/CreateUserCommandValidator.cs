@@ -1,10 +1,10 @@
 ﻿namespace Aurora.BizSuite.Security.Application.Users.Create;
 
-public class CreateUserValidator : AbstractValidator<CreateUserCommand>
+public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     private readonly IUserRepository _userRepository;
 
-    public CreateUserValidator(IUserRepository userRepository)
+    public CreateUserCommandValidator(IUserRepository userRepository)
     {
         _userRepository = userRepository;
 

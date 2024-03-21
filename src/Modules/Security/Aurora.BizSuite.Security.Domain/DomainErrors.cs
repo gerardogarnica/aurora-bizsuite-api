@@ -46,9 +46,9 @@ public static class DomainErrors
             "Users.RoleAlreadyAssigned",
             "Role already is assigned to the user.");
 
-        public static readonly BaseError UserNotFound = new(
+        public static BaseError UserNotFound(string email) => new(
             "Users.NotFound",
-            "User not found.");
+            $"User with email {email} not found.");
 
         public static readonly BaseError UserAlreadyExists = new(
             "Users.AlreadyExists",
