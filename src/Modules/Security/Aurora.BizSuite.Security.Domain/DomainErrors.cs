@@ -50,6 +50,10 @@ public static class DomainErrors
             "Users.NotFound",
             $"User with email {email} not found.");
 
+        public static BaseError UserNotFound(Guid id) => new(
+            "Users.NotFound",
+            $"User with ID {id} not found.");
+
         public static readonly BaseError UserAlreadyExists = new(
             "Users.AlreadyExists",
             "User already exists and cannot be created again.");

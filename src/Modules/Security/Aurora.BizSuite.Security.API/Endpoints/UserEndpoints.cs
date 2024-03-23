@@ -1,4 +1,5 @@
 ﻿using Aurora.BizSuite.Security.Application.Users.Create;
+using Aurora.BizSuite.Security.Application.Users.GetById;
 using Aurora.BizSuite.Security.Application.Users.Update;
 
 namespace Aurora.BizSuite.Security.API.Endpoints;
@@ -14,6 +15,7 @@ public class UserEndpoints : IBaseEndpoint
 
         CreateUser(group);
         UpdateUser(group);
+        GetUserById(group);
     }
 
     static RouteHandlerBuilder CreateUser(RouteGroupBuilder routeGroup)
@@ -63,6 +65,27 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("UpdateUser")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder GetUserById(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapGet(
+            "/{id}",
+            async (Guid id, ISender sender) =>
+            {
+                var command = new GetByIdCommand(id);
+
+                var result = await sender.Send(command);
+
+                return result.IsSuccessful
+                    ? Results.Ok(result.Value)
+                    : Results.NoContent();
+            })
+            .WithName("GetUserById")
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
             .AllowAnonymous();
     }
