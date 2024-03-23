@@ -1,13 +1,13 @@
 ﻿namespace Aurora.BizSuite.Security.Application.Users.GetById;
 
-public class GetByIdCommandQuery(
+public class GetUserByIdQueryHandler(
     IUserRepository userRepository)
-    : IQueryHandler<GetByIdCommand, UserInfo>
+    : IQueryHandler<GetUserByIdQuery, UserInfo>
 {
     private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result<UserInfo>> Handle(
-        GetByIdCommand request,
+        GetUserByIdQuery request,
         CancellationToken cancellationToken)
     {
         // Get user

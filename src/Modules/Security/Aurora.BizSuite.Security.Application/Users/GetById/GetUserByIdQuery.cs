@@ -1,3 +1,3 @@
 ﻿namespace Aurora.BizSuite.Security.Application.Users.GetById;
 
-public sealed record GetByIdCommand(Guid Id) : IQuery<UserInfo>;
+public sealed record GetUserByIdQuery(Guid Id) : IQuery<UserInfo>;

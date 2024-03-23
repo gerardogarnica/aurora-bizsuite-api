@@ -1,5 +1,6 @@
 ﻿using Aurora.BizSuite.Security.Application.Users.Create;
 using Aurora.BizSuite.Security.Application.Users.GetById;
+using Aurora.BizSuite.Security.Application.Users.GetList;
 using Aurora.BizSuite.Security.Application.Users.Update;
 
 namespace Aurora.BizSuite.Security.API.Endpoints;
@@ -16,6 +17,7 @@ public class UserEndpoints : IBaseEndpoint
         CreateUser(group);
         UpdateUser(group);
         GetUserById(group);
+        GetPagedUsers(group);
     }
 
     static RouteHandlerBuilder CreateUser(RouteGroupBuilder routeGroup)
@@ -75,9 +77,9 @@ public class UserEndpoints : IBaseEndpoint
             "/{id}",
             async (Guid id, ISender sender) =>
             {
-                var command = new GetByIdCommand(id);
+                var query = new GetUserByIdQuery(id);
 
-                var result = await sender.Send(command);
+                var result = await sender.Send(query);
 
                 return result.IsSuccessful
                     ? Results.Ok(result.Value)
@@ -86,6 +88,33 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("GetUserById")
             .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status204NoContent)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder GetPagedUsers(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapGet(
+            "/",
+            async (
+                [FromQuery] int page,
+                [FromQuery] int pageSize,
+                [FromQuery] string? searchTerms,
+                ISender sender) =>
+            {
+                var query = new GetUserListQuery(
+                    new Framework.PagedViewRequest(page, pageSize),
+                    searchTerms,
+                    true);
+
+                var result = await sender.Send(query);
+
+                return result.IsSuccessful
+                    ? Results.Ok(result.Value)
+                    : Results.NoContent();
+            })
+            .WithName("GetPagedUsers")
+            .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
             .AllowAnonymous();
     }
