@@ -32,6 +32,7 @@ public static class DependencyInjections
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<SecurityContext>());
 
         // Repository implementations
+        services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 
