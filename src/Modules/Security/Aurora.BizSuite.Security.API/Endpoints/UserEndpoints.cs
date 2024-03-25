@@ -2,6 +2,7 @@
 using Aurora.BizSuite.Security.Application.Users.GetById;
 using Aurora.BizSuite.Security.Application.Users.GetList;
 using Aurora.BizSuite.Security.Application.Users.Update;
+using Aurora.BizSuite.Security.Application.Users.UpdateStatus;
 
 namespace Aurora.BizSuite.Security.API.Endpoints;
 
@@ -18,6 +19,8 @@ public class UserEndpoints : IBaseEndpoint
         GetPagedUsers(group);
         CreateUser(group);
         UpdateUser(group);
+        ActivateUser(group);
+        InactivateUser(group);
     }
 
     static RouteHandlerBuilder GetUserById(RouteGroupBuilder routeGroup)
@@ -48,7 +51,7 @@ public class UserEndpoints : IBaseEndpoint
             async (
                 [FromQuery] int page,
                 [FromQuery] int pageSize,
-                [FromQuery] Guid roleId,
+                [FromQuery] Guid? roleId,
                 [FromQuery] string? searchTerms,
                 [FromQuery] bool onlyActives,
                 ISender sender) =>
@@ -116,6 +119,48 @@ public class UserEndpoints : IBaseEndpoint
                     : result.ToBadRequest();
             })
             .WithName("UpdateUser")
+            .Produces(StatusCodes.Status202Accepted)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder ActivateUser(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapPut(
+            "/{guid}/activate",
+            async (Guid guid, ISender sender) =>
+            {
+                var command = new UpdateUserStatusCommand(guid, true);
+
+                var result = await sender.Send(command);
+
+                return result.IsSuccessful
+                    ? Results.Accepted(string.Empty)
+                    : result.ToBadRequest();
+            })
+            .WithName("ActivateUser")
+            .Produces(StatusCodes.Status202Accepted)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder InactivateUser(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapPut(
+            "/{guid}/inactivate",
+            async (Guid guid, ISender sender) =>
+            {
+                var command = new UpdateUserStatusCommand(guid, false);
+
+                var result = await sender.Send(command);
+
+                return result.IsSuccessful
+                    ? Results.Accepted(string.Empty)
+                    : result.ToBadRequest();
+            })
+            .WithName("InactivateUser")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)

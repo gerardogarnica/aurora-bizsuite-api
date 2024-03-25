@@ -12,6 +12,15 @@ internal class UserRepository : BaseRepository<User, UserId>, IUserRepository
         _context = context;
     }
 
+    public override async Task<User?> GetByIdAsync(UserId id)
+    {
+        return await _context
+            .Users
+            .Include(x => x.Roles)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _context
