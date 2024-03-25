@@ -11,10 +11,16 @@ public class GetUserListQueryHandler(
         CancellationToken cancellationToken)
     {
         // Get paged users
-        var users = await _userRepository.GetPagedAsync(
-            request.PagedView,
-            request.SearchTerms,
-            request.OnlyActives);
+        var users = request.RoleId.HasValue
+            ? await _userRepository.GetPagedAsync(
+                request.PagedView,
+                request.RoleId.Value,
+                request.SearchTerms,
+                request.OnlyActives)
+            : await _userRepository.GetPagedAsync(
+                request.PagedView,
+                request.SearchTerms,
+                request.OnlyActives);
 
         // Return paged result
         return new PagedResult<UserInfo>(

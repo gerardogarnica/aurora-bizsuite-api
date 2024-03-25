@@ -14,10 +14,61 @@ public class UserEndpoints : IBaseEndpoint
             .WithTags("User")
             .RequireAuthorization();
 
-        CreateUser(group);
-        UpdateUser(group);
         GetUserById(group);
         GetPagedUsers(group);
+        CreateUser(group);
+        UpdateUser(group);
+    }
+
+    static RouteHandlerBuilder GetUserById(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapGet(
+            "/{id}",
+            async (Guid id, ISender sender) =>
+            {
+                var query = new GetUserByIdQuery(id);
+
+                var result = await sender.Send(query);
+
+                return result.IsSuccessful
+                    ? Results.Ok(result.Value)
+                    : Results.NoContent();
+            })
+            .WithName("GetUserById")
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status204NoContent)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder GetPagedUsers(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapGet(
+            "/",
+            async (
+                [FromQuery] int page,
+                [FromQuery] int pageSize,
+                [FromQuery] Guid roleId,
+                [FromQuery] string? searchTerms,
+                [FromQuery] bool onlyActives,
+                ISender sender) =>
+            {
+                var query = new GetUserListQuery(
+                    new Framework.PagedViewRequest(page, pageSize),
+                    roleId,
+                    searchTerms,
+                    onlyActives);
+
+                var result = await sender.Send(query);
+
+                return result.IsSuccessful
+                    ? Results.Ok(result.Value)
+                    : Results.NoContent();
+            })
+            .WithName("GetPagedUsers")
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
     }
 
     static RouteHandlerBuilder CreateUser(RouteGroupBuilder routeGroup)
@@ -67,54 +118,6 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("UpdateUser")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
-    }
-
-    static RouteHandlerBuilder GetUserById(RouteGroupBuilder routeGroup)
-    {
-        return routeGroup.MapGet(
-            "/{id}",
-            async (Guid id, ISender sender) =>
-            {
-                var query = new GetUserByIdQuery(id);
-
-                var result = await sender.Send(query);
-
-                return result.IsSuccessful
-                    ? Results.Ok(result.Value)
-                    : Results.NoContent();
-            })
-            .WithName("GetUserById")
-            .Produces(StatusCodes.Status200OK)
-            .Produces<ProblemDetails>(StatusCodes.Status204NoContent)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
-    }
-
-    static RouteHandlerBuilder GetPagedUsers(RouteGroupBuilder routeGroup)
-    {
-        return routeGroup.MapGet(
-            "/",
-            async (
-                [FromQuery] int page,
-                [FromQuery] int pageSize,
-                [FromQuery] string? searchTerms,
-                ISender sender) =>
-            {
-                var query = new GetUserListQuery(
-                    new Framework.PagedViewRequest(page, pageSize),
-                    searchTerms,
-                    true);
-
-                var result = await sender.Send(query);
-
-                return result.IsSuccessful
-                    ? Results.Ok(result.Value)
-                    : Results.NoContent();
-            })
-            .WithName("GetPagedUsers")
-            .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
             .AllowAnonymous();
     }

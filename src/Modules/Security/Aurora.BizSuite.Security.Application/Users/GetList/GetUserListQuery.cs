@@ -2,5 +2,6 @@
 
 public sealed record GetUserListQuery(
     PagedViewRequest PagedView,
+    Guid? RoleId,
     string? SearchTerms,
     bool OnlyActives) : IQuery<PagedResult<UserInfo>>;
