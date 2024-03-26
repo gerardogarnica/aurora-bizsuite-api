@@ -38,7 +38,7 @@ public class Role : AggregateRoot<RoleId>
     public Result<Role> Update(string name, string description, string? notes)
     {
         if (!IsActive)
-            return Result.Fail<Role>(DomainErrors.RoleErrors.RoleIsNotActive);
+            return Result.Fail<Role>(DomainErrors.RoleErrors.RoleIsNotActive(Id.Value, name));
 
         Name = name.Trim();
         Description = description.Trim();
@@ -60,7 +60,7 @@ public class Role : AggregateRoot<RoleId>
     public Result<Role> Inactivate()
     {
         if (!IsActive)
-            return Result.Fail<Role>(DomainErrors.RoleErrors.RoleIsNotActive);
+            return Result.Fail<Role>(DomainErrors.RoleErrors.RoleIsNotActive(Id.Value, Name));
 
         IsActive = false;
 

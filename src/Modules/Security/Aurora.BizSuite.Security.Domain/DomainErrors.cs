@@ -15,9 +15,9 @@ public static class DomainErrors
 
     public static class RoleErrors
     {
-        public static readonly BaseError RoleNotFound = new(
+        public static BaseError RoleNotFound(Guid id) => new (
             "Roles.NotFound",
-            "Role not found.");
+            $"Role with ID {id} not found.");
 
         public static readonly BaseError RoleAlreadyExists = new(
             "Roles.AlreadyExists",
@@ -27,9 +27,9 @@ public static class DomainErrors
             "Roles.AlreadyIsActive",
             "Role already is active and cannot be activate again.");
 
-        public static readonly BaseError RoleIsNotActive = new(
+        public static BaseError RoleIsNotActive(Guid id, string name) => new(
             "Roles.RoleIsNotActive",
-            "Role is not active.");
+            $"Role '{id} - {name}' is not active.");
     }
 
     public static class UserErrors
@@ -77,5 +77,9 @@ public static class DomainErrors
         public static readonly BaseError UserIsNotInactive = new(
             "Users.UserIsNotInactive",
             "User is not inactive.");
+
+        public static BaseError UserRoleIsUnableToRemove(Guid id) => new(
+            "Users.UserRoleIsUnableToRemove",
+            $"Role {id} is unable to remove.");
     }
 }

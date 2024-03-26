@@ -2,6 +2,7 @@
 using Aurora.BizSuite.Security.Application.Users.GetById;
 using Aurora.BizSuite.Security.Application.Users.GetList;
 using Aurora.BizSuite.Security.Application.Users.Update;
+using Aurora.BizSuite.Security.Application.Users.UpdateRole;
 using Aurora.BizSuite.Security.Application.Users.UpdateStatus;
 
 namespace Aurora.BizSuite.Security.API.Endpoints;
@@ -21,6 +22,8 @@ public class UserEndpoints : IBaseEndpoint
         UpdateUser(group);
         ActivateUser(group);
         InactivateUser(group);
+        AddRole(group);
+        RemoveRole(group);
     }
 
     static RouteHandlerBuilder GetUserById(RouteGroupBuilder routeGroup)
@@ -128,10 +131,10 @@ public class UserEndpoints : IBaseEndpoint
     static RouteHandlerBuilder ActivateUser(RouteGroupBuilder routeGroup)
     {
         return routeGroup.MapPut(
-            "/{guid}/activate",
-            async (Guid guid, ISender sender) =>
+            "/{userId}/activate",
+            async (Guid userId, ISender sender) =>
             {
-                var command = new UpdateUserStatusCommand(guid, true);
+                var command = new UpdateUserStatusCommand(userId, true);
 
                 var result = await sender.Send(command);
 
@@ -149,10 +152,10 @@ public class UserEndpoints : IBaseEndpoint
     static RouteHandlerBuilder InactivateUser(RouteGroupBuilder routeGroup)
     {
         return routeGroup.MapPut(
-            "/{guid}/inactivate",
-            async (Guid guid, ISender sender) =>
+            "/{userId}/inactivate",
+            async (Guid userId, ISender sender) =>
             {
-                var command = new UpdateUserStatusCommand(guid, false);
+                var command = new UpdateUserStatusCommand(userId, false);
 
                 var result = await sender.Send(command);
 
@@ -161,6 +164,48 @@ public class UserEndpoints : IBaseEndpoint
                     : result.ToBadRequest();
             })
             .WithName("InactivateUser")
+            .Produces(StatusCodes.Status202Accepted)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder AddRole(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapPut(
+            "/{userId}/roles/add/{roleId}",
+            async (Guid userId, Guid roleId, ISender sender) =>
+            {
+                var command = new UpdateUserRoleCommand(userId, roleId, true);
+
+                var result = await sender.Send(command);
+
+                return result.IsSuccessful
+                    ? Results.Accepted(string.Empty)
+                    : result.ToBadRequest();
+            })
+            .WithName("AddRole")
+            .Produces(StatusCodes.Status202Accepted)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
+            .AllowAnonymous();
+    }
+
+    static RouteHandlerBuilder RemoveRole(RouteGroupBuilder routeGroup)
+    {
+        return routeGroup.MapPut(
+            "/{userId}/roles/remove/{roleId}",
+            async (Guid userId, Guid roleId, ISender sender) =>
+            {
+                var command = new UpdateUserRoleCommand(userId, roleId, false);
+
+                var result = await sender.Send(command);
+
+                return result.IsSuccessful
+                    ? Results.Accepted(string.Empty)
+                    : result.ToBadRequest();
+            })
+            .WithName("RemoveRole")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)

@@ -132,13 +132,40 @@ public class User : AggregateRoot<UserId>
         return Result.Ok();
     }
 
-    public Result AddRole(Role role, bool isEditable)
+    public Result<User> AddRole(Role role, bool isEditable)
     {
+        if (Status is not UserStatusType.Active)
+            return Result.Fail<User>(DomainErrors.UserErrors.UserIsNotActive);
+
+        if (!role.IsActive)
+            return Result.Fail<User>(DomainErrors.RoleErrors.RoleIsNotActive(role.Id.Value, role.Name));
+
         if (_roles.Any(x => x.RoleId == role.Id))
-            return Result.Fail(DomainErrors.UserErrors.RoleAlreadyAssigned);
+            return Result.Fail<User>(DomainErrors.UserErrors.RoleAlreadyAssigned);
 
         _roles.Add(new UserRole(Id, role.Id, isEditable));
 
-        return Result.Ok();
+        return this;
+    }
+
+    public Result<User> RemoveRole(Role role)
+    {
+        var userRole = _roles.FirstOrDefault(x => x.RoleId == role.Id);
+
+        if (Status is not UserStatusType.Active)
+            return Result.Fail<User>(DomainErrors.UserErrors.UserIsNotActive);
+
+        if (!role.IsActive)
+            return Result.Fail<User>(DomainErrors.RoleErrors.RoleIsNotActive(role.Id.Value, role.Name));
+
+        if (userRole is null)
+            return Result.Fail<User>(DomainErrors.RoleErrors.RoleNotFound(role.Id.Value));
+
+        if (!userRole.IsEditable)
+            return Result.Fail<User>(DomainErrors.UserErrors.UserRoleIsUnableToRemove(role.Id.Value));
+
+        _roles.Remove(userRole);
+
+        return this;
     }
 }
