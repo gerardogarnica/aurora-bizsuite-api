@@ -1,10 +1,15 @@
 ﻿namespace Aurora.Framework.Identity;
 
-public sealed class RoleInfo
+public sealed class RoleInfo(
+    Guid roleId,
+    string name,
+    string description,
+    string? notes,
+    bool isActive)
 {
-    public Guid RoleId { get; set; }
-    public required string Name { get; set; }
-    public required string Description { get; set; }
-    public string? Notes { get; private set; }
-    public bool IsActive { get; private set; }
+    public Guid RoleId { get; private set; } = roleId;
+    public string Name { get; private set; } = name;
+    public string Description { get; private set; } = description;
+    public string? Notes { get; private set; } = notes;
+    public bool IsActive { get; private set; } = isActive;
 }

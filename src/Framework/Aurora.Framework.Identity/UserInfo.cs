@@ -7,9 +7,10 @@ public sealed class UserInfo(
     string lastName,
     DateTime? passwordExpirationDate,
     string? notes,
-    bool isEditable)
+    bool isEditable,
+    IList<RoleInfo> roles)
 {
-    private readonly List<RoleInfo> _roles = [];
+    private readonly List<RoleInfo> _roles = [.. roles];
 
     public Guid UserId { get; private set; } = userId;
     public string Email { get; private set; } = email;
