@@ -50,12 +50,18 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
             new(JwtRegisteredClaimNames.Email, user.Email),
             new(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
-            new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
+            new("edit", user.IsEditable.ToString()),
+            new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())
         ];
 
         if (user.PasswordExpirationDate.HasValue)
         {
             _claims.Add(new("ped", user.PasswordExpirationDate.Value.ToShortDateString()));
+        }
+
+        if (user.Notes is not null)
+        {
+            _claims.Add(new("notes", user.Notes));
         }
 
         foreach (var role in user.Roles)
