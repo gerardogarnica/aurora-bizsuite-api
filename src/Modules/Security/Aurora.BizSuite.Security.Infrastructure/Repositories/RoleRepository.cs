@@ -7,6 +7,14 @@ internal class RoleRepository(SecurityContext context)
 
     public IUnitOfWork UnitOfWork => _context;
 
+    public async Task<IList<Role>> GetByIds(IList<RoleId> ids)
+    {
+        return await _context
+            .Roles
+            .Where(x => ids.Contains(x.Id) && x.IsActive)
+            .ToListAsync();
+    }
+
     public Task<PagedResult<Role>> GetPagedAsync(
         PagedViewRequest paged,
         string? searchTerms,
