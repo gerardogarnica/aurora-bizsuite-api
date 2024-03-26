@@ -24,7 +24,7 @@ public class GetUserListQueryHandler(
 
         // Return paged result
         return new PagedResult<UserInfo>(
-            users.Items.Select(x => x.ToUserInfo()).ToList(),
+            users.Items.Select(x => x.ToUserInfo([])).ToList(),
             users.TotalItems,
             users.CurrentPage,
             users.TotalPages);

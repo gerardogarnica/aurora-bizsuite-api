@@ -1,15 +1,20 @@
-﻿namespace Aurora.BizSuite.Security.Application.Identity.Login;
+﻿using Aurora.BizSuite.Security.Application.Roles;
+using Aurora.BizSuite.Security.Application.Users;
+
+namespace Aurora.BizSuite.Security.Application.Identity.Login;
 
 public class LoginCommandHandler(
     IJwtProvider jwtProvider,
     IPasswordProvider passwordProvider,
     IUserRepository userRepository,
+    IRoleRepository roleRepository,
     ISessionRepository sessionRepository)
     : ICommandHandler<LoginCommand, IdentityToken>
 {
     private readonly IJwtProvider _jwtProvider = jwtProvider;
     private readonly IPasswordProvider _passwordProvider = passwordProvider;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IRoleRepository _roleRepository = roleRepository;
     private readonly ISessionRepository _sessionRepository = sessionRepository;
 
     public async Task<Result<IdentityToken>> Handle(
@@ -31,14 +36,12 @@ public class LoginCommandHandler(
         if (!user.PasswordMatches(_passwordProvider, passwordResult.Value))
             return Result.Fail<IdentityToken>(DomainErrors.UserErrors.InvalidCredentials);
 
-        var userInfo = new UserInfo(
-            user.Id.Value,
-            user.Email,
-            user.FirstName,
-            user.LastName,
-            user.PasswordExpirationDate,
-            user.Notes,
-            user.IsEditable);
+        // Get user roles
+        var roles = await _roleRepository
+            .GetByIds(user.Roles.Aggregate(new List<RoleId>(), (acc, x) => { acc.Add(x.RoleId); return acc; }));
+
+        // Create user info
+        var userInfo = user.ToUserInfo(roles.Select(x => x.ToRoleInfo()).ToList());
 
         // Generate identity token
         var identityToken = _jwtProvider.CreateToken(userInfo);
