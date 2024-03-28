@@ -25,12 +25,11 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
 
         // Create the security token
         var token = new JwtSecurityToken(
-            _options.Issuer,
-            _options.Audience,
-            _claims,
-            null,
-            DateTime.Now.AddMinutes(_options.AccessTokenLifeTime),
-            signingCredentials);
+            issuer: _options.Issuer,
+            audience: _options.Audience,
+            claims: _claims,
+            expires: DateTime.Now.AddMinutes(_options.AccessTokenLifeTime),
+            signingCredentials: signingCredentials);
 
         var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
@@ -51,7 +50,7 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
             new(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new("edit", user.IsEditable.ToString()),
-            new(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())
+            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
         ];
 
         if (user.PasswordExpirationDate.HasValue)
