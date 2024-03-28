@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Aurora.Framework.Persistence.EFCore;
 
-public sealed class AuditableEntitiesInterceptor : SaveChangesInterceptor
+public sealed class SoftDeletableEntitiesInterceptor : SaveChangesInterceptor
 {
-    public AuditableEntitiesInterceptor()
+    public SoftDeletableEntitiesInterceptor()
     {
         // TODO: implement HttpContextAccessor to get the current user
     }
@@ -16,30 +16,26 @@ public sealed class AuditableEntitiesInterceptor : SaveChangesInterceptor
         CancellationToken cancellationToken = default)
     {
         if (eventData.Context is not null)
-            UpdateAuditableEntities(eventData.Context);
+            UpdateSoftDeletableEntities(eventData.Context);
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void UpdateAuditableEntities(DbContext context)
+    private static void UpdateSoftDeletableEntities(DbContext context)
     {
         var now = DateTime.UtcNow;
         var user = "System";
-        var auditableEntities = context
+        var softDeletableEntities = context
             .ChangeTracker
-            .Entries<IAuditableEntity>();
+            .Entries<ISoftDeletable>()
+            .Where(e => e.State == EntityState.Deleted);
 
-        foreach (var entry in auditableEntities)
+        foreach (var entry in softDeletableEntities)
         {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.SetCreated(user, now);
-            }
-
-            if (entry.State == EntityState.Modified)
-            {
-                entry.Entity.SetUpdated(user, now);
-            }
+            entry.Entity.IsDeleted = true;
+            entry.Entity.DeletedBy = user;
+            entry.Entity.DeletedAt = now;
+            entry.State = EntityState.Modified;
         }
     }
 }
