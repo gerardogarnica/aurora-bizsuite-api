@@ -6,7 +6,8 @@ using System.Text;
 
 namespace Aurora.Framework.Api;
 
-public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) : IConfigureNamedOptions<JwtBearerOptions>
+public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) 
+    : IConfigureNamedOptions<JwtBearerOptions>
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
@@ -16,7 +17,7 @@ public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) : IConfigure
         options.TokenValidationParameters = new()
         {
             ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = _jwtOptions.Issuer,
