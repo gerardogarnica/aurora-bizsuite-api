@@ -14,6 +14,7 @@ public class UserEndpoints : IBaseEndpoint
         var group = app
             .MapGroup("aurora/bizsuite/users")
             .WithTags("User")
+            .WithOpenApi()
             .RequireAuthorization();
 
         GetUserById(group);
@@ -43,8 +44,7 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("GetUserById")
             .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status204NoContent)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder GetPagedUsers(RouteGroupBuilder routeGroup)
@@ -73,8 +73,7 @@ public class UserEndpoints : IBaseEndpoint
             })
             .WithName("GetPagedUsers")
             .Produces(StatusCodes.Status200OK)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder CreateUser(RouteGroupBuilder routeGroup)
@@ -99,8 +98,7 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("CreateUser")
             .Produces<Guid>(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder UpdateUser(RouteGroupBuilder routeGroup)
@@ -124,8 +122,7 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("UpdateUser")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder ActivateUser(RouteGroupBuilder routeGroup)
@@ -145,8 +142,7 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("ActivateUser")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder InactivateUser(RouteGroupBuilder routeGroup)
@@ -166,8 +162,7 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("InactivateUser")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder AddRole(RouteGroupBuilder routeGroup)
@@ -187,8 +182,7 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("AddRole")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     static RouteHandlerBuilder RemoveRole(RouteGroupBuilder routeGroup)
@@ -208,7 +202,6 @@ public class UserEndpoints : IBaseEndpoint
             .WithName("RemoveRole")
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .AllowAnonymous();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 }

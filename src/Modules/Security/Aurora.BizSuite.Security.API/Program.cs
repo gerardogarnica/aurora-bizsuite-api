@@ -8,15 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthentication(builder.Configuration);
-builder.Services.AddAuthorization();
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddEndpoints();
+
+builder.Services
+    .AddAuthorization()
+    .AddAuthentication(builder.Configuration);
+
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddEndpoints();
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Host.ConfigureSerilogToElasticsearch();
+
+builder.Services.ConfigureOptions<SwaggerGenOptionsSetup>();
 
 var app = builder.Build();
 
@@ -27,10 +34,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseHttpsRedirection()
+    .UseAuthentication()
+    .UseAuthorization();
 
 app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
