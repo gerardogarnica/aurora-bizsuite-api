@@ -13,6 +13,7 @@ internal class RolesSeed : ISeedDataService<SecurityContext>
             .ForEach(roleData =>
             {
                 var role = Role.Create(
+                    new Domain.Applications.ApplicationId(roleData.ApplicationId),
                     roleData.Name,
                     roleData.Description,
                     roleData.Notes);
@@ -26,6 +27,7 @@ internal class RolesSeed : ISeedDataService<SecurityContext>
 
     private class RoleSeedData
     {
+        public required Guid ApplicationId { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
         public string? Notes { get; set; }
