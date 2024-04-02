@@ -13,4 +13,29 @@ public class Application : AggregateRoot<ApplicationId>
         Description = string.Empty;
         HasCustomConfiguration = false;
     }
+
+    private Application(
+        ApplicationId applicationId,
+        string name,
+        string description,
+        bool hasCustomConfiguration)
+        : base(applicationId)
+    {
+        Name = name.Trim();
+        Description = description.Trim();
+        HasCustomConfiguration = hasCustomConfiguration;
+    }
+
+    public static Application Create(
+        ApplicationId applicationId,
+        string name,
+        string description,
+        bool hasCustomConfiguration)
+    {
+        return new Application(
+            applicationId,
+            name,
+            description,
+            hasCustomConfiguration);
+    }
 }

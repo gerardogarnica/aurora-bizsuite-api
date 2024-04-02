@@ -16,12 +16,11 @@ public static class DependencyInjections
         // Connection string
         services.AddDbContext<SecurityContext>((sp, options) =>
         {
-            var auditableInterceptor = sp.GetService<AuditableEntitiesInterceptor>()!;
-
             options.UseSqlServer(
                 configuration.GetConnectionString("SecurityDataConnection"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", SecurityContext.DEFAULT_SCHEMA))
-                .AddInterceptors(auditableInterceptor);
+                .AddInterceptors(sp.GetService<AuditableEntitiesInterceptor>()!)
+                .AddInterceptors(sp.GetService<SoftDeletableEntitiesInterceptor>()!);
         });
 
         // Authentication services

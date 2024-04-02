@@ -1,0 +1,14 @@
+[
+  {
+    "ApplicationId": "25EE60E9-A6A9-45E8-A899-752C4B4576DC",
+    "Name": "Aurora Platform",
+    "Description": "Management platform of Aurora Soft applications.",
+    "HasCustomConfiguration": false
+  },
+  {
+    "ApplicationId": "AA59B685-58AF-45B9-831C-2326BE27284A",
+    "Name": "Aurora Biz Suite",
+    "Description": "Aurora Soft business ERP application.",
+    "HasCustomConfiguration": false
+  }
+]

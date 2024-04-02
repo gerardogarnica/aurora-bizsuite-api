@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Seeds\Data\applications.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Seeds\Data\roles.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
