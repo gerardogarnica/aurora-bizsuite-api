@@ -1,6 +1,4 @@
-﻿using Aurora.BizSuite.Security.Domain.Applications;
-
-namespace Aurora.BizSuite.Security.Infrastructure.Configurations;
+﻿namespace Aurora.BizSuite.Security.Infrastructure.Configurations;
 
 internal class ApplicationConfiguration : IEntityTypeConfiguration<Application>
 {
