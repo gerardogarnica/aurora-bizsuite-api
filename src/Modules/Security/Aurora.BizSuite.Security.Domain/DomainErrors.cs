@@ -2,6 +2,13 @@
 
 public static class DomainErrors
 {
+    public static class ApplicationErrors
+    {
+        public static BaseError ApplicationNotFound(Guid id) => new(
+            "Applications.NotFound",
+            $"Application with ID {id} not found.");
+    }
+
     public static class Password
     {
         public static BaseError PasswordNotNull => new(
