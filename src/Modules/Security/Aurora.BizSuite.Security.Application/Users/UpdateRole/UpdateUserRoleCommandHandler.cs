@@ -1,6 +1,4 @@
-﻿using Aurora.BizSuite.Security.Domain.Roles;
-
-namespace Aurora.BizSuite.Security.Application.Users.UpdateRole;
+﻿namespace Aurora.BizSuite.Security.Application.Users.UpdateRole;
 
 internal class UpdateUserRoleCommandHandler(
     IUserRepository userRepository,

@@ -19,7 +19,7 @@ public class IdentityEndpoints : IBaseEndpoint
     {
         return routeGroup.MapPost(
             "/login",
-            async ([FromHeader] string application, [FromBody] UserCredentials request, ISender sender) =>
+            async ([FromHeader] Guid application, [FromBody] UserCredentials request, ISender sender) =>
             {
                 var command = new LoginCommand(request.Email, request.Password)
                 {

@@ -1,10 +1,15 @@
-﻿namespace Aurora.BizSuite.Security.Domain.Applications;
+﻿using Aurora.BizSuite.Security.Domain.Roles;
+
+namespace Aurora.BizSuite.Security.Domain.Applications;
 
 public class Application : AggregateRoot<ApplicationId>
 {
+    private readonly List<Role> _roles = [];
+
     public string Name { get; private set; }
     public string Description { get; private set; }
     public bool HasCustomConfiguration { get; private set; }
+    public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
 
     protected Application()
         : base(new ApplicationId(Guid.NewGuid()))
