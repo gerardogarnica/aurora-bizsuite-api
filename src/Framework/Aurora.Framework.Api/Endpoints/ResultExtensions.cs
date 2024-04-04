@@ -13,7 +13,7 @@ public static class ResultExtensions
 
         return Results.Problem(
             type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-            title: "Bad Request",
+            title: "The result of the request is a failure",
             statusCode: StatusCodes.Status400BadRequest,
             detail: result.Error.Message,
             extensions: new Dictionary<string, object?>
