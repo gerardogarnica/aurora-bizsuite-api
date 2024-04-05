@@ -110,21 +110,21 @@ public class User : AggregateRoot<UserId>
         return this;
     }
 
-    public bool PasswordMatches(IPasswordProvider passwordProvider, Password password)
+    public bool PasswordMatches(Password password)
     {
         if (string.IsNullOrWhiteSpace(password.Value)) return false;
 
         if (PasswordExpirationDate is not null && PasswordExpirationDate < DateTime.Now.Date) return false;
 
-        return passwordProvider.VerifyPassword(_passwordHash, password.Value);
+        return _passwordHash == password.Value;
     }
 
-    public Result ChangePassword(Password newPassword)
+    public Result ChangePassword(Password oldPassword, Password newPassword)
     {
-        if (string.IsNullOrWhiteSpace(newPassword.Value))
+        if (_passwordHash != oldPassword.Value)
             return Result.Fail(DomainErrors.UserErrors.InvalidPassword);
 
-        if (_passwordHash == newPassword.Value)
+        if (string.IsNullOrWhiteSpace(newPassword.Value))
             return Result.Fail(DomainErrors.UserErrors.InvalidPassword);
 
         _passwordHash = newPassword.Value;
@@ -137,7 +137,7 @@ public class User : AggregateRoot<UserId>
         if (Status is not UserStatusType.Active)
             return Result.Fail<User>(DomainErrors.UserErrors.UserIsNotActive);
 
-        if (!role.IsActive)
+        if (role.IsDeleted)
             return Result.Fail<User>(DomainErrors.RoleErrors.RoleIsNotActive(role.Id.Value, role.Name));
 
         if (_roles.Any(x => x.RoleId == role.Id))
@@ -155,7 +155,7 @@ public class User : AggregateRoot<UserId>
         if (Status is not UserStatusType.Active)
             return Result.Fail<User>(DomainErrors.UserErrors.UserIsNotActive);
 
-        if (!role.IsActive)
+        if (role.IsDeleted)
             return Result.Fail<User>(DomainErrors.RoleErrors.RoleIsNotActive(role.Id.Value, role.Name));
 
         if (userRole is null)

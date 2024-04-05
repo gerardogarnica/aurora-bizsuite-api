@@ -1,5 +1,4 @@
-﻿using Aurora.Framework.Identity;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 
 namespace Aurora.BizSuite.Security.Infrastructure.Cryptography;

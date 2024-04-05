@@ -31,11 +31,12 @@ public class LoginCommandHandler(
         if (user.Status is not UserStatusType.Active)
             return Result.Fail<IdentityToken>(DomainErrors.UserErrors.InvalidCredentials);
 
-        var passwordResult = Password.Create(request.Password);
+        // Create password
+        var passwordResult = Password.Create(passwordProvider, request.Password);
         if (!passwordResult.IsSuccessful)
             return Result.Fail<IdentityToken>(passwordResult.Error);
 
-        if (!user.PasswordMatches(passwordProvider, passwordResult.Value))
+        if (!user.PasswordMatches(passwordResult.Value))
             return Result.Fail<IdentityToken>(DomainErrors.UserErrors.InvalidCredentials);
 
         // Get user roles
@@ -46,7 +47,7 @@ public class LoginCommandHandler(
         var userInfo = user.ToUserInfo(roles.Select(x => x.ToRoleInfo()).ToList());
 
         // Generate identity token
-        var identityToken = jwtProvider.CreateToken(userInfo);
+        var identityToken = jwtProvider.CreateToken(userInfo, application.Id.Value);
 
         // Creates user session
         var session = UserSession

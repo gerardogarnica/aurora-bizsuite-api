@@ -8,15 +8,19 @@ public sealed class Password : ValueObject
 
     private Password(string value) => Value = value;
 
-    public static Result<Password> Create(string value)
+    public static Result<Password> Create(
+        IPasswordProvider passwordProvider, 
+        string unhashedValue)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(unhashedValue))
             return Result.Fail<Password>(DomainErrors.Password.PasswordNotNull);
 
-        if (value.Length < MinLength)
+        if (unhashedValue.Length < MinLength)
             return Result.Fail<Password>(DomainErrors.Password.PasswordTooShort);
 
-        return new Password(value);
+        var passwordHash = passwordProvider.HashPassword(unhashedValue);
+
+        return new Password(passwordHash);
     }
 
     public static implicit operator string(Password password) => password?.Value ?? string.Empty;

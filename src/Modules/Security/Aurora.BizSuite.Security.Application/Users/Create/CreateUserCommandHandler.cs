@@ -5,16 +5,12 @@ public class CreateUserCommandHandler(
     IUserRepository userRepository)
     : ICommandHandler<CreateUserCommand, Guid>
 {
-    private readonly IPasswordProvider _passwordProvider = passwordProvider;
-    private readonly IUserRepository _userRepository = userRepository;
-
     public async Task<Result<Guid>> Handle(
         CreateUserCommand request,
         CancellationToken cancellationToken)
     {
         // Create password
-        var passwordHash = _passwordProvider.HashPassword(request.Email);
-        var passwordResult = Password.Create(passwordHash);
+        var passwordResult = Password.Create(passwordProvider, request.Email);
         if (!passwordResult.IsSuccessful)
             return Result.Fail<Guid>(passwordResult.Error);
 
@@ -28,7 +24,7 @@ public class CreateUserCommandHandler(
             request.Notes,
             request.IsEditable);
 
-        await _userRepository.InsertAsync(user);
+        await userRepository.InsertAsync(user);
 
         return user.Id.Value;
     }
