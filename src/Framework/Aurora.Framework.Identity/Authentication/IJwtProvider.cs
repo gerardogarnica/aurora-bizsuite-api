@@ -2,5 +2,5 @@
 
 public interface IJwtProvider
 {
-    IdentityToken CreateToken(UserInfo user);
+    IdentityToken CreateToken(UserInfo user, Guid applicationId);
 }

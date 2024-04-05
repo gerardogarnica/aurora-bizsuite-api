@@ -1,5 +1,4 @@
-﻿using Aurora.Framework.Identity;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,10 +12,10 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
     private List<Claim> _claims = [];
     private readonly JwtOptions _options = options.Value;
 
-    public IdentityToken CreateToken(UserInfo user)
+    public IdentityToken CreateToken(UserInfo user, Guid applicationId)
     {
         // Set user claims
-        SetClaims(user);
+        SetClaims(user, applicationId);
 
         // Create signing credentials
         var signingCredentials = new SigningCredentials(
@@ -41,7 +40,7 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
             DateTime.Now.AddDays(_options.RefreshTokenLifeTime));
     }
 
-    private void SetClaims(UserInfo user)
+    private void SetClaims(UserInfo user, Guid applicationId)
     {
         _claims =
         [
@@ -50,6 +49,7 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
             new(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new("edit", user.IsEditable.ToString()),
+            new("app", applicationId.ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
         ];
 
