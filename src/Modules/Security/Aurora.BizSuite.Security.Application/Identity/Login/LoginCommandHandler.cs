@@ -32,16 +32,16 @@ public class LoginCommandHandler(
             return Result.Fail<IdentityToken>(DomainErrors.UserErrors.InvalidCredentials);
 
         // Create password
-        var passwordResult = Password.Create(passwordProvider, request.Password);
+        var passwordResult = Password.Create(request.Password);
         if (!passwordResult.IsSuccessful)
             return Result.Fail<IdentityToken>(passwordResult.Error);
 
-        if (!user.PasswordMatches(passwordResult.Value))
+        if (!user.PasswordMatches(passwordProvider, passwordResult.Value))
             return Result.Fail<IdentityToken>(DomainErrors.UserErrors.InvalidCredentials);
 
         // Get user roles
         var roles = await roleRepository
-            .GetByIds(user.Roles.Aggregate(new List<RoleId>(), (acc, x) => { acc.Add(x.RoleId); return acc; }));
+            .GetByIds(user.Roles.Aggregate(new List<RoleId>(), (acc, x) => { acc.Add(x.RoleId); return acc; }), applicationId);
 
         // Create user info
         var userInfo = user.ToUserInfo(roles.Select(x => x.ToRoleInfo()).ToList());

@@ -10,7 +10,7 @@ public class CreateUserCommandHandler(
         CancellationToken cancellationToken)
     {
         // Create password
-        var passwordResult = Password.Create(passwordProvider, request.Email);
+        var passwordResult = Password.Create(request.Email);
         if (!passwordResult.IsSuccessful)
             return Result.Fail<Guid>(passwordResult.Error);
 
@@ -19,7 +19,7 @@ public class CreateUserCommandHandler(
             request.FirstName,
             request.LastName,
             request.Email,
-            passwordResult.Value,
+            passwordProvider.HashPassword(passwordResult.Value),
             DateTime.UtcNow.Date,
             request.Notes,
             request.IsEditable);
