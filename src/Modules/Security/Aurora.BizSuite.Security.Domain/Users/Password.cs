@@ -8,9 +8,7 @@ public sealed class Password : ValueObject
 
     private Password(string value) => Value = value;
 
-    public static Result<Password> Create(
-        IPasswordProvider passwordProvider, 
-        string unhashedValue)
+    public static Result<Password> Create(string unhashedValue)
     {
         if (string.IsNullOrWhiteSpace(unhashedValue))
             return Result.Fail<Password>(DomainErrors.Password.PasswordNotNull);
@@ -18,9 +16,7 @@ public sealed class Password : ValueObject
         if (unhashedValue.Length < MinLength)
             return Result.Fail<Password>(DomainErrors.Password.PasswordTooShort);
 
-        var passwordHash = passwordProvider.HashPassword(unhashedValue);
-
-        return new Password(passwordHash);
+        return new Password(unhashedValue);
     }
 
     public static implicit operator string(Password password) => password?.Value ?? string.Empty;

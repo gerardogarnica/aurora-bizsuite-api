@@ -14,7 +14,7 @@ public class GetUserListQueryHandler(
         var users = request.RoleId.HasValue
             ? await _userRepository.GetPagedAsync(
                 request.PagedView,
-                request.RoleId.Value,
+                new RoleId(request.RoleId.Value),
                 request.SearchTerms,
                 request.OnlyActives)
             : await _userRepository.GetPagedAsync(

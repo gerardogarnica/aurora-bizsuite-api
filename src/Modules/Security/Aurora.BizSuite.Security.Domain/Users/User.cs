@@ -30,7 +30,7 @@ public class User : AggregateRoot<UserId>
 
     private User(
         string firstName, string lastName, string email,
-        Password password, DateTime? expirationDate, string? notes,
+        string password, DateTime? expirationDate, string? notes,
         bool isEditable, UserStatusType statusType)
         : base(new UserId(Guid.NewGuid()))
     {
@@ -41,11 +41,11 @@ public class User : AggregateRoot<UserId>
         Notes = notes?.Trim();
         IsEditable = isEditable;
         Status = statusType;
-        _passwordHash = password.Value;
+        _passwordHash = password;
     }
 
     public static User Create(
-        string firstName, string lastName, string email, Password password,
+        string firstName, string lastName, string email, string password,
         DateTime? expirationDate, string? notes, bool isEditable)
     {
         var user = new User(
@@ -62,7 +62,7 @@ public class User : AggregateRoot<UserId>
     }
 
     public static User Register(
-        string firstName, string lastName, string email, Password password)
+        string firstName, string lastName, string email, string password)
     {
         return new User(
             firstName,
@@ -110,13 +110,13 @@ public class User : AggregateRoot<UserId>
         return this;
     }
 
-    public bool PasswordMatches(Password password)
+    public bool PasswordMatches(IPasswordProvider passwordProvider, Password password)
     {
         if (string.IsNullOrWhiteSpace(password.Value)) return false;
 
         if (PasswordExpirationDate is not null && PasswordExpirationDate < DateTime.Now.Date) return false;
 
-        return _passwordHash == password.Value;
+        return passwordProvider.VerifyPassword(_passwordHash, password.Value);
     }
 
     public Result ChangePassword(Password oldPassword, Password newPassword)
