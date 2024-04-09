@@ -9,6 +9,6 @@ internal static class RoleInfoExtensions
             role.Name,
             role.Description,
             role.Notes,
-            role.IsActive);
+            !role.IsDeleted);
     }
 }

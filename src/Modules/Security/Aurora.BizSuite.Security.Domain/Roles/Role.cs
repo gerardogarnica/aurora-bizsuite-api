@@ -3,7 +3,7 @@ using ApplicationId = Aurora.BizSuite.Security.Domain.Applications.ApplicationId
 
 namespace Aurora.BizSuite.Security.Domain.Roles;
 
-public class Role : AggregateRoot<RoleId>
+public class Role : AggregateRoot<RoleId>, ISoftDeletable
 {
     private readonly List<UserRole> _users = [];
 
@@ -11,7 +11,9 @@ public class Role : AggregateRoot<RoleId>
     public string Name { get; private set; }
     public string Description { get; private set; }
     public string? Notes { get; private set; }
-    public bool IsActive { get; private set; }
+    public bool IsDeleted { get; set; }
+    public string? DeletedBy { get; set; }
+    public DateTime? DeletedAt { get; set; }
     public IReadOnlyCollection<UserRole> Users => _users.AsReadOnly();
 
     protected Role()
@@ -20,18 +22,16 @@ public class Role : AggregateRoot<RoleId>
         ApplicationId = new ApplicationId(Guid.NewGuid());
         Name = string.Empty;
         Description = string.Empty;
-        IsActive = true;
     }
 
     private Role(
-        ApplicationId applicationId, string name, string description, string? notes, bool isActive)
+        ApplicationId applicationId, string name, string description, string? notes)
         : base(new RoleId(Guid.NewGuid()))
     {
         ApplicationId = applicationId;
         Name = name.Trim();
         Description = description.Trim();
         Notes = notes?.Trim();
-        IsActive = isActive;
     }
 
     public static Role Create(
@@ -41,14 +41,13 @@ public class Role : AggregateRoot<RoleId>
             applicationId,
             name,
             description,
-            notes,
-            true);
+            notes);
     }
 
     public Result<Role> Update(
         string name, string description, string? notes)
     {
-        if (!IsActive)
+        if (IsDeleted)
             return Result.Fail<Role>(DomainErrors.RoleErrors.RoleIsNotActive(Id.Value, name));
 
         Name = name.Trim();
@@ -60,20 +59,12 @@ public class Role : AggregateRoot<RoleId>
 
     public Result<Role> Activate()
     {
-        if (IsActive)
+        if (!IsDeleted)
             return Result.Fail<Role>(DomainErrors.RoleErrors.RoleAlreadyIsActive);
 
-        IsActive = true;
-
-        return this;
-    }
-
-    public Result<Role> Inactivate()
-    {
-        if (!IsActive)
-            return Result.Fail<Role>(DomainErrors.RoleErrors.RoleIsNotActive(Id.Value, Name));
-
-        IsActive = false;
+        IsDeleted = false;
+        DeletedBy = null;
+        DeletedAt = null;
 
         return this;
     }

@@ -18,6 +18,7 @@ internal class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
         builder.Property(p => p.UserId).IsRequired();
         builder.Property(p => p.RoleId).IsRequired();
         builder.Property(p => p.IsEditable).IsRequired();
+
         builder.AddAuditableProperties<UserRole, UserRoleId>();
 
         // Indexes
