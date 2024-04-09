@@ -7,21 +7,18 @@ public class GetUserByIdQueryHandler(
     IRoleRepository roleRepository)
     : IQueryHandler<GetUserByIdQuery, UserInfo>
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IRoleRepository _roleRepository = roleRepository;
-
     public async Task<Result<UserInfo>> Handle(
         GetUserByIdQuery request,
         CancellationToken cancellationToken)
     {
         // Get user
-        var user = await _userRepository.GetByIdAsync(new UserId(request.Id));
+        var user = await userRepository.GetByIdAsync(new UserId(request.Id));
 
         if (user is null)
             return Result.Fail<UserInfo>(DomainErrors.UserErrors.UserNotFound(request.Id));
 
         // Get user roles
-        var roles = await _roleRepository
+        var roles = await roleRepository
             .GetByIds(user.Roles.Aggregate(new List<RoleId>(), (acc, x) => { acc.Add(x.RoleId); return acc; }));
 
         // Return user info

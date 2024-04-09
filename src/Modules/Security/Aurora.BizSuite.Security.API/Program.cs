@@ -18,6 +18,7 @@ builder.Services
     .AddInfrastructureServices(builder.Configuration)
     .AddEndpoints();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
