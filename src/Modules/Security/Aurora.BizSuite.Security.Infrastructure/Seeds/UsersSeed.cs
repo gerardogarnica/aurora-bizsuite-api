@@ -1,12 +1,19 @@
-﻿using Aurora.Framework.Identity;
+﻿using ApplicationId = Aurora.BizSuite.Security.Domain.Applications.ApplicationId;
 
 namespace Aurora.BizSuite.Security.Infrastructure.Seeds;
 
 internal class UsersSeed : ISeedDataService<SecurityContext>
 {
+    const string defaultApplicationId = "25EE60E9-A6A9-45E8-A899-752C4B4576DC";
+    const string defaultRoleName = "Administradores";
+
     public void Seed(SecurityContext context)
     {
-        var adminRole = context.Roles.FirstOrDefault(x => x.Name.Equals("Administradores"));
+        var applicationId = new ApplicationId(new Guid(defaultApplicationId));
+        var adminRole = context
+            .Roles
+            .IgnoreQueryFilters()
+            .FirstOrDefault(x => x.Name.Equals(defaultRoleName) && x.ApplicationId == applicationId);
 
         var path = UtilsSeed.GetSeedDataPath("users.json");
         var userList = context.GetFromFile<List<UserSeedData>, SecurityContext>(path);
@@ -16,13 +23,13 @@ internal class UsersSeed : ISeedDataService<SecurityContext>
             .ToList()
             .ForEach(userData =>
             {
-                var password = context.PasswordProvider.HashPassword(userData.Email);
+                var passwordResult = Password.Create(userData.Email);
 
                 var user = User.Create(
                     userData.FirstName,
                     userData.LastName,
                     userData.Email,
-                    Password.Create(password).Value,
+                    context.PasswordProvider.HashPassword(passwordResult.Value),
                     null,
                     null,
                     userData.IsEditable);

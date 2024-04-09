@@ -6,9 +6,10 @@ internal class RolesSeed : ISeedDataService<SecurityContext>
     {
         var path = UtilsSeed.GetSeedDataPath("roles.json");
         var rolesList = context.GetFromFile<List<RoleSeedData>, SecurityContext>(path);
+        var roles = context.Roles.IgnoreQueryFilters().ToList();
 
         rolesList?
-            .Where(roleData => !context.Roles.ToList().Any(x => x.Name.Equals(roleData.Name)))
+            .Where(roleData => !roles.Any(x => x.Name.Equals(roleData.Name)))
             .ToList()
             .ForEach(roleData =>
             {
