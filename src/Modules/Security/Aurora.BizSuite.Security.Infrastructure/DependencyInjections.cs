@@ -1,7 +1,4 @@
-﻿using Aurora.BizSuite.Security.Infrastructure.Authentication;
-using Aurora.BizSuite.Security.Infrastructure.Cryptography;
-using Aurora.Framework.Identity;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Aurora.BizSuite.Security.Infrastructure;
@@ -26,6 +23,7 @@ public static class DependencyInjections
         // Authentication services
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordProvider, PasswordProvider>();
+        services.AddScoped<ApplicationProvider>();
 
         // IUnitOfWork implementation
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<SecurityContext>());
