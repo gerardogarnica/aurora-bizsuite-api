@@ -30,7 +30,7 @@ internal class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasDatabaseName("IX_Role_IsDeleted");
 
         // Indexes
-        builder.HasIndex(p => p.Name)
+        builder.HasIndex(i => new { i.ApplicationId, i.Name })
             .IsUnique()
             .HasDatabaseName("UK_Role");
 

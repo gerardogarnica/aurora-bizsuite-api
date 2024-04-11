@@ -1,22 +1,42 @@
-﻿using ApplicationId = Aurora.BizSuite.Security.Domain.Applications.ApplicationId;
+﻿using System.Linq.Expressions;
+using ApplicationId = Aurora.BizSuite.Security.Domain.Applications.ApplicationId;
 
 namespace Aurora.BizSuite.Security.Infrastructure.Repositories;
 
-internal class RoleRepository(SecurityContext context)
+internal class RoleRepository(
+    SecurityContext context,
+    ApplicationProvider applicationProvider)
     : BaseRepository<Role, RoleId>(context), IRoleRepository
 {
     public IUnitOfWork UnitOfWork => context;
 
-    public override async Task<Role?> GetByIdAsync(RoleId id) => await context
-        .Roles
-        .Include(x => x.Users)
-        .Where(x => x.Id == id)
-        .FirstOrDefaultAsync();
+    private readonly ApplicationId _currentApplicationId = new(applicationProvider.GetApplicationId());
 
-    public async Task<IList<Role>> GetByIds(IList<RoleId> ids) => await context
-        .Roles
-        .Where(x => ids.Contains(x.Id))
-        .ToListAsync();
+    public override async Task<Role?> GetByIdAsync(RoleId id)
+    {
+        Expression<Func<Role, bool>> filter = applicationProvider.IsAdminApp()
+            ? x => x.Id == id
+            : x => x.Id == id && x.ApplicationId == _currentApplicationId;
+
+        return await context
+            .Roles
+            .IgnoreQueryFilters()
+            .Include(x => x.Users)
+            .Where(filter)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<IList<Role>> GetByIds(IList<RoleId> ids)
+    {
+        Expression<Func<Role, bool>> filter = applicationProvider.IsAdminApp()
+            ? x => ids.Contains(x.Id)
+            : x => ids.Contains(x.Id) && x.ApplicationId == _currentApplicationId;
+
+        return await context
+            .Roles
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync();
+    }
 
     public async Task<IList<Role>> GetByIds(IList<RoleId> ids, ApplicationId applicationId) => await context
         .Roles
@@ -39,6 +59,11 @@ internal class RoleRepository(SecurityContext context)
             query = query.Where(
                 x => x.Name.Contains(searchTerms) ||
                 x.Description.Contains(searchTerms));
+        }
+
+        if (!applicationProvider.IsAdminApp())
+        {
+            query.Where(x => x.ApplicationId == _currentApplicationId);
         }
 
         return await ToPagedResultAsync(query.OrderBy(x => x.Name), paged);

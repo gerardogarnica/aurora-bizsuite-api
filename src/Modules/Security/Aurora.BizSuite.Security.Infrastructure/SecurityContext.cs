@@ -38,9 +38,6 @@ public class SecurityContext : DbContext, IUnitOfWork
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SecurityContext).Assembly);
-
-        modelBuilder.Entity<Role>()
-            .HasQueryFilter(f => f.ApplicationId == new Domain.Applications.ApplicationId(_applicationId));
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
