@@ -1,20 +1,24 @@
-﻿namespace Aurora.BizSuite.Security.Infrastructure.Seeds;
+﻿using ApplicationId = Aurora.BizSuite.Security.Domain.Applications.ApplicationId;
+
+namespace Aurora.BizSuite.Security.Infrastructure.Seeds;
 
 internal class RolesSeed : ISeedDataService<SecurityContext>
 {
     public void Seed(SecurityContext context)
     {
+        var applicationId = new ApplicationId(new Guid(UtilsSeed.AdminApplicationCode));
+
         var path = UtilsSeed.GetSeedDataPath("roles.json");
         var rolesList = context.GetFromFile<List<RoleSeedData>, SecurityContext>(path);
         var roles = context.Roles.IgnoreQueryFilters().ToList();
 
         rolesList?
-            .Where(roleData => !roles.Any(x => x.Name.Equals(roleData.Name)))
+            .Where(roleData => !roles.Any(x => x.ApplicationId == applicationId && x.Name.Equals(roleData.Name)))
             .ToList()
             .ForEach(roleData =>
             {
                 var role = Role.Create(
-                    new Domain.Applications.ApplicationId(roleData.ApplicationId),
+                    new ApplicationId(roleData.ApplicationId),
                     roleData.Name,
                     roleData.Description,
                     roleData.Notes);

@@ -4,22 +4,20 @@ namespace Aurora.BizSuite.Security.Infrastructure.Seeds;
 
 internal class UsersSeed : ISeedDataService<SecurityContext>
 {
-    const string defaultApplicationId = "25EE60E9-A6A9-45E8-A899-752C4B4576DC";
-    const string defaultRoleName = "Administradores";
-
     public void Seed(SecurityContext context)
     {
-        var applicationId = new ApplicationId(new Guid(defaultApplicationId));
+        var applicationId = new ApplicationId(new Guid(UtilsSeed.AdminApplicationCode));
         var adminRole = context
             .Roles
             .IgnoreQueryFilters()
-            .FirstOrDefault(x => x.Name.Equals(defaultRoleName) && x.ApplicationId == applicationId);
+            .FirstOrDefault(x => x.ApplicationId == applicationId && x.Name.Equals(UtilsSeed.AdminRoleName));
 
         var path = UtilsSeed.GetSeedDataPath("users.json");
         var userList = context.GetFromFile<List<UserSeedData>, SecurityContext>(path);
+        var users = context.Users.ToList();
 
         userList?
-            .Where(userData => !context.Users.ToList().Any(x => x.Email.Equals(userData.Email)))
+            .Where(userData => !users.Any(x => x.Email.Equals(userData.Email)))
             .ToList()
             .ForEach(userData =>
             {
