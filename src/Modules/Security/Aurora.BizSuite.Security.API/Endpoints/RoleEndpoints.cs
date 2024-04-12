@@ -16,7 +16,7 @@ public class RoleEndpoints : IBaseEndpoint
 
         group.GetRoleById();
         group.GetPagedRoles();
-        //group.GetApplicationList();
+        group.GetApplicationList();
     }
 }
 

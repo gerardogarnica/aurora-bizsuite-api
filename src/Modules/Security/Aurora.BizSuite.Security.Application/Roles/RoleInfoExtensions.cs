@@ -6,6 +6,7 @@ internal static class RoleInfoExtensions
     {
         return new RoleInfo(
             role.Id.Value,
+            role.ApplicationId.Value,
             role.Name,
             role.Description,
             role.Notes,
