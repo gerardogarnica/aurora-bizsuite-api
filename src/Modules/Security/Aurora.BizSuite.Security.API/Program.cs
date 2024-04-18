@@ -28,6 +28,13 @@ builder.Services.ConfigureOptions<SwaggerGenOptionsSetup>();
 
 var app = builder.Build();
 
+RouteGroupBuilder routeGroup = app
+    .MapGroup("aurora/bizsuite/")
+    .WithOpenApi()
+    .RequireAuthorization();
+
+app.MapEndpoints(routeGroup);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -41,7 +48,6 @@ app.UseHttpsRedirection()
 
 app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
-app.MapEndpoints();
 
 app.MigrateDatabase<SecurityContext>();
 app.SeedData<SecurityContext>();
