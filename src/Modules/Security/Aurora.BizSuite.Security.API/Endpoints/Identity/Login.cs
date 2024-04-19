@@ -1,24 +1,14 @@
 ﻿using Aurora.BizSuite.Security.Application.Identity.Login;
 using Aurora.Framework.Identity;
 
-namespace Aurora.BizSuite.Security.API.Endpoints;
+namespace Aurora.BizSuite.Security.API.Endpoints.Identity;
 
-public class IdentityEndpoints : IBaseEndpoint
+public class Login : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app
-            .MapGroup("aurora/bizsuite/auth")
-            .WithTags("Auth")
-            .RequireAuthorization();
-
-        AddLogin(group);
-    }
-
-    static RouteHandlerBuilder AddLogin(RouteGroupBuilder routeGroup)
-    {
-        return routeGroup.MapPost(
-            "/login",
+        app.MapPost(
+            "auth/login",
             async ([FromHeader] Guid application, [FromBody] UserCredentials request, ISender sender) =>
             {
                 var command = new LoginCommand(request.Email, request.Password)
@@ -33,6 +23,7 @@ public class IdentityEndpoints : IBaseEndpoint
                     : result.ToBadRequest();
             })
             .WithName("Login")
+            .WithTags(EndpointTags.Identity)
             .Produces<IdentityToken>(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
