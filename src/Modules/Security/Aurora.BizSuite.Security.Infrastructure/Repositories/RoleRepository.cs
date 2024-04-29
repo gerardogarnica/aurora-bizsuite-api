@@ -5,7 +5,7 @@ namespace Aurora.BizSuite.Security.Infrastructure.Repositories;
 
 internal class RoleRepository(
     SecurityContext context,
-    ApplicationProvider applicationProvider)
+    IApplicationProvider applicationProvider)
     : BaseRepository<Role, RoleId>(context), IRoleRepository
 {
     public IUnitOfWork UnitOfWork => context;
@@ -23,6 +23,15 @@ internal class RoleRepository(
             .IgnoreQueryFilters()
             .Include(x => x.Users)
             .Where(filter)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Role?> GetByNameAsync(ApplicationId applicationId, string name)
+    {
+        return await context
+            .Roles
+            .IgnoreQueryFilters()
+            .Where(x => x.ApplicationId == applicationId && x.Name == name)
             .FirstOrDefaultAsync();
     }
 
