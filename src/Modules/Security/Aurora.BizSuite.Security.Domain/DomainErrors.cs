@@ -26,6 +26,10 @@ public static class DomainErrors
             "Roles.NotFound",
             $"Role with ID {id} not found.");
 
+        public static BaseError RoleNotFound(string name) => new (
+            "Roles.NotFound",
+            $"Role with name '{name}' not found.");
+
         public static readonly BaseError RoleAlreadyExists = new(
             "Roles.AlreadyExists",
             "Role already exists and cannot be created again.");
