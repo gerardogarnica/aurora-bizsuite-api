@@ -16,20 +16,15 @@ public class SecurityContext : DbContext, IUnitOfWork
     internal const string BATCH_USER = "BATCH-USR";
 
     private readonly IPublisher _publisher;
-    private readonly ApplicationProvider _applicationProvider;
-    private readonly Guid _applicationId;
     internal readonly IPasswordProvider PasswordProvider;
 
     public SecurityContext(
         DbContextOptions<SecurityContext> options,
         IPublisher publisher,
-        ApplicationProvider applicationProvider,
         IPasswordProvider pwdProvider)
         : base(options)
     {
         _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
-        _applicationProvider = applicationProvider ?? throw new ArgumentNullException(nameof(applicationProvider));
-        _applicationId = _applicationProvider.GetApplicationId();
         PasswordProvider = pwdProvider ?? throw new ArgumentNullException(nameof(pwdProvider));
     }
 

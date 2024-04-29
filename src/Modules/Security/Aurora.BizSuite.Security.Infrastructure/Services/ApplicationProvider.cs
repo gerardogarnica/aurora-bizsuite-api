@@ -2,7 +2,9 @@
 
 namespace Aurora.BizSuite.Security.Infrastructure.Services;
 
-public sealed class ApplicationProvider(IHttpContextAccessor httpContextAccessor)
+public sealed class ApplicationProvider(
+    IHttpContextAccessor httpContextAccessor)
+    : IApplicationProvider
 {
     private const string AppIdClaimTypeName = "app";
     private const string AdminApplicationCode = "25EE60E9-A6A9-45E8-A899-752C4B4576DC";
@@ -18,8 +20,10 @@ public sealed class ApplicationProvider(IHttpContextAccessor httpContextAccessor
         return new Guid(appIdClaim.Value);
     }
 
-    internal bool IsAdminApp()
+    public bool IsAdminApp()
     {
-        return GetApplicationId().ToString() == AdminApplicationCode;
+        return GetApplicationId()
+            .ToString()
+            .Equals(AdminApplicationCode, StringComparison.CurrentCultureIgnoreCase);
     }
 }

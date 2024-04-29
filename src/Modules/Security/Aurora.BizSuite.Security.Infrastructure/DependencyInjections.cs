@@ -23,7 +23,7 @@ public static class DependencyInjections
         // Authentication services
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordProvider, PasswordProvider>();
-        services.AddScoped<ApplicationProvider>();
+        services.AddScoped<IApplicationProvider, ApplicationProvider>();
 
         // IUnitOfWork implementation
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<SecurityContext>());
