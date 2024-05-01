@@ -1,6 +1,4 @@
-﻿using ApplicationId = Aurora.BizSuite.Security.Domain.Applications.ApplicationId;
-
-namespace Aurora.BizSuite.Security.Application.Roles.Update;
+﻿namespace Aurora.BizSuite.Security.Application.Roles.Update;
 
 internal class UpdateRoleCommandHandler(
     IRoleRepository roleRepository,
@@ -11,14 +9,19 @@ internal class UpdateRoleCommandHandler(
         UpdateRoleCommand request,
         CancellationToken cancellationToken)
     {
-        // Get application ID
-        var applicationId = new ApplicationId(applicationProvider.GetApplicationId());
-
         // Get role
-        var role = await roleRepository.GetByNameAsync(applicationId, request.Name.Trim());
+        var roleId = new RoleId(request.RoleId);
+        var role = await roleRepository.GetByIdAsync(roleId);
 
         if (role is null)
             return Result.Fail(DomainErrors.RoleErrors.RoleNotFound(request.Name));
+
+        // Validate application
+        if (!applicationProvider.IsAdminApp()
+            && role.ApplicationId.Value.Equals(applicationProvider.GetApplicationId()))
+        {
+            return Result.Fail<Guid>(RoleValidationErrors.ApplicationIdIsNotValid);
+        }
 
         // Update role
         var roleResult = role.Update(
