@@ -4,8 +4,8 @@ namespace Aurora.Framework.Persistence.EFCore;
 
 public static class EntityTypeExtensions
 {
-    public static void AddAuditableProperties<T, TId>(
-        this EntityTypeBuilder<T> builder) where T : AuditableEntity<TId>
+    public static void AddAuditableProperties<T>(
+        this EntityTypeBuilder<T> builder) where T : class, IAuditableEntity
     {
         builder.Property(p => p.CreatedBy).IsRequired().HasMaxLength(100);
         builder.Property(p => p.CreatedAt).IsRequired();

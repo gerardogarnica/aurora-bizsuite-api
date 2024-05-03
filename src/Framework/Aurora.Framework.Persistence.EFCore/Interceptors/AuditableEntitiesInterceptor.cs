@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aurora.Framework.Application.Time;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Aurora.Framework.Persistence.EFCore;
 
-public sealed class AuditableEntitiesInterceptor : SaveChangesInterceptor
+public sealed class AuditableEntitiesInterceptor(
+    IDateTimeProvider dateTimeProvider) : SaveChangesInterceptor
 {
-    public AuditableEntitiesInterceptor()
-    {
-        // TODO: implement HttpContextAccessor to get the current user
-    }
+    // TODO: implement HttpContextAccessor to get the current user
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
@@ -21,9 +20,8 @@ public sealed class AuditableEntitiesInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void UpdateAuditableEntities(DbContext context)
+    private void UpdateAuditableEntities(DbContext context)
     {
-        var now = DateTime.UtcNow;
         var user = "System";
         var auditableEntities = context
             .ChangeTracker
@@ -33,12 +31,14 @@ public sealed class AuditableEntitiesInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.SetCreated(user, now);
+                entry.Property(nameof(IAuditableEntity.CreatedBy)).CurrentValue = user;
+                entry.Property(nameof(IAuditableEntity.CreatedAt)).CurrentValue = dateTimeProvider.UtcNow;
             }
 
             if (entry.State == EntityState.Modified)
             {
-                entry.Entity.SetUpdated(user, now);
+                entry.Property(nameof(IAuditableEntity.UpdatedBy)).CurrentValue = user;
+                entry.Property(nameof(IAuditableEntity.UpdatedAt)).CurrentValue = dateTimeProvider.UtcNow;
             }
         }
     }

@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aurora.Framework.Application.Time;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Aurora.Framework.Persistence.EFCore;
 
-public sealed class SoftDeletableEntitiesInterceptor : SaveChangesInterceptor
+public sealed class SoftDeletableEntitiesInterceptor(
+    IDateTimeProvider dateTimeProvider) : SaveChangesInterceptor
 {
-    public SoftDeletableEntitiesInterceptor()
-    {
-        // TODO: implement HttpContextAccessor to get the current user
-    }
+    // TODO: implement HttpContextAccessor to get the current user
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
@@ -21,9 +20,8 @@ public sealed class SoftDeletableEntitiesInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void UpdateSoftDeletableEntities(DbContext context)
+    private void UpdateSoftDeletableEntities(DbContext context)
     {
-        var now = DateTime.UtcNow;
         var user = "System";
         var softDeletableEntities = context
             .ChangeTracker
@@ -32,10 +30,11 @@ public sealed class SoftDeletableEntitiesInterceptor : SaveChangesInterceptor
 
         foreach (var entry in softDeletableEntities)
         {
-            entry.Entity.IsDeleted = true;
-            entry.Entity.DeletedBy = user;
-            entry.Entity.DeletedAt = now;
             entry.State = EntityState.Modified;
+
+            entry.Property(nameof(ISoftDeletable.IsDeleted)).CurrentValue = true;
+            entry.Property(nameof(ISoftDeletable.DeletedBy)).CurrentValue = user;
+            entry.Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = dateTimeProvider.UtcNow;
         }
     }
 }
