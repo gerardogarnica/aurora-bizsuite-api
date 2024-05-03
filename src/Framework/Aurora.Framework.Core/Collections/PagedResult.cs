@@ -13,7 +13,7 @@ public class PagedResult<T> where T : class
 
     protected PagedResult()
     {
-        Items = new List<T>();
+        Items = [];
     }
 
     public PagedResult(List<T> items, int totalItems, int currentPage, int totalPages)
