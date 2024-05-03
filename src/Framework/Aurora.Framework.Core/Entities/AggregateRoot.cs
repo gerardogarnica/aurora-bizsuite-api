@@ -2,15 +2,15 @@
 
 namespace Aurora.Framework;
 
-public interface IAggregateRoot : IAuditableEntity
+public interface IAggregateRoot
 {
-    IReadOnlyCollection<BaseEvent> DomainEvents { get; }
+    IReadOnlyCollection<DomainEvent> DomainEvents { get; }
 
     void ClearDomainEvents();
-    void RemoveDomainEvent(BaseEvent domainEvent);
+    void RemoveDomainEvent(DomainEvent domainEvent);
 }
 
-public abstract class AggregateRoot<TId> : AuditableEntity<TId>, IAggregateRoot
+public abstract class AggregateRoot<TId> : BaseEntity<TId>, IAggregateRoot
 {
     protected AggregateRoot() { }
 
@@ -18,14 +18,14 @@ public abstract class AggregateRoot<TId> : AuditableEntity<TId>, IAggregateRoot
         : base(id) { }
 
 
-    private readonly List<BaseEvent> _domainEvents = [];
+    private readonly List<DomainEvent> _domainEvents = [];
 
     [NotMapped]
-    public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected void AddDomainEvent(BaseEvent domainEvent) => _domainEvents.Add(domainEvent);
+    protected void AddDomainEvent(DomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 
-    public void RemoveDomainEvent(BaseEvent domainEvent) => _domainEvents.Remove(domainEvent);
+    public void RemoveDomainEvent(DomainEvent domainEvent) => _domainEvents.Remove(domainEvent);
 }
