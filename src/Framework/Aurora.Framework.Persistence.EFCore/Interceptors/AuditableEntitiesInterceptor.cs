@@ -1,11 +1,11 @@
-﻿using Aurora.Framework.Application.Time;
+﻿using Aurora.Framework.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Aurora.Framework.Persistence.EFCore;
 
 public sealed class AuditableEntitiesInterceptor(
-    IDateTimeProvider dateTimeProvider) : SaveChangesInterceptor
+    IDateTimeService dateTimeProvider) : SaveChangesInterceptor
 {
     // TODO: implement HttpContextAccessor to get the current user
 

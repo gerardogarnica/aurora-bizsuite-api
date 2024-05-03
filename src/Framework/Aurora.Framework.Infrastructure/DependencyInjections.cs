@@ -1,4 +1,4 @@
-﻿using Aurora.Framework.Application.Time;
+﻿using Aurora.Framework.Application;
 using Aurora.Framework.Infrastructure.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -10,7 +10,7 @@ public static class DependencyInjections
     public static IServiceCollection AddCommonInfrastructureServices(
         this IServiceCollection services)
     {
-        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.TryAddSingleton<IDateTimeService, DateTimeService>();
 
         return services;
     }

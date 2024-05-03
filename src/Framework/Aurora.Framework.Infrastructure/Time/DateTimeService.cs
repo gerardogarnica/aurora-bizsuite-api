@@ -1,8 +1,8 @@
-﻿using Aurora.Framework.Application.Time;
+﻿using Aurora.Framework.Application;
 
 namespace Aurora.Framework.Infrastructure.Time;
 
-internal class DateTimeProvider : IDateTimeProvider
+internal class DateTimeService : IDateTimeService
 {
     public DateTime UtcNow => DateTime.UtcNow;
 }
