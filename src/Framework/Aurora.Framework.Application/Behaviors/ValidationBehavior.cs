@@ -1,32 +1,41 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 
 namespace Aurora.Framework.Application;
 
-public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
+internal sealed class ValidationBehavior<TRequest, TResponse>(
+    IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+    where TRequest : IBaseCommand
     where TResponse : Result
 {
-    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
-
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (!_validators.Any()) return await next();
-
-        var results = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(request)));
-
-        var failures = results
-            .Where(x => x.Errors.Count != 0)
-            .SelectMany(x => x.Errors)
-            .Distinct()
-            .ToList();
-
-        if (failures.Count == 0) return await next();
+        ValidationFailure[] failures = await ValidateAsync(request);
+        if (failures.Length == 0) return await next();
 
         throw new ValidationException(failures);
+    }
+
+    private async Task<ValidationFailure[]> ValidateAsync(TRequest request)
+    {
+        if (!validators.Any()) return [];
+
+        var context = new ValidationContext<TRequest>(request);
+
+        var results = await Task.WhenAll(
+            validators.Select(v => v.ValidateAsync(request)));
+
+        var failures = results
+            .Where(x => !x.IsValid)
+            .SelectMany(x => x.Errors)
+            .Distinct()
+            .ToArray();
+
+        return failures;
     }
 }
