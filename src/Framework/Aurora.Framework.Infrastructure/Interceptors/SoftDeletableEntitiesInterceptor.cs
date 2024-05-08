@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Aurora.Framework.Persistence.EFCore;
+namespace Aurora.Framework.Infrastructure;
 
 public sealed class SoftDeletableEntitiesInterceptor(
-    IDateTimeService dateTimeProvider) : SaveChangesInterceptor
+    IDateTimeService dateTimeProvider)
+    : SaveChangesInterceptor
 {
     // TODO: implement HttpContextAccessor to get the current user
 
