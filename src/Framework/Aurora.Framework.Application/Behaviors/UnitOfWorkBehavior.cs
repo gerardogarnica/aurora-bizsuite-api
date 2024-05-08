@@ -3,12 +3,11 @@ using System.Transactions;
 
 namespace Aurora.Framework.Application;
 
-public class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
+internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(
+    IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
@@ -19,7 +18,7 @@ public class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
         using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
         var response = await next();
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         transactionScope.Complete();
 
         return response;

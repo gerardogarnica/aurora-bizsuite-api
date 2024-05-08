@@ -4,12 +4,12 @@ using System.Diagnostics;
 
 namespace Aurora.Framework.Application;
 
-public class PerformanceBehavior<TRequest, TResponse>(ILogger<TRequest> logger)
+internal sealed class PerformanceBehavior<TRequest, TResponse>(
+    ILogger<PerformanceBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly Stopwatch _timer = new();
-    private readonly ILogger<TRequest> _logger = logger;
 
     public async Task<TResponse> Handle(
         TRequest request,
@@ -18,16 +18,14 @@ public class PerformanceBehavior<TRequest, TResponse>(ILogger<TRequest> logger)
     {
         _timer.Start();
 
-        var response = await next();
+        TResponse response = await next();
 
         _timer.Stop();
 
         if (_timer.ElapsedMilliseconds > 500)
         {
-            var requestName = typeof(TRequest).Name;
-
-            _logger.LogWarning("Aurora Soft long running request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}",
-                requestName, _timer.ElapsedMilliseconds, request);
+            logger.LogWarning("Long-running request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}",
+                typeof(TRequest).Name, _timer.ElapsedMilliseconds, request);
         }
 
         return response;
