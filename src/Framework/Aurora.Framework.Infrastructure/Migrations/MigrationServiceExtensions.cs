@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aurora.Framework.Persistence.EFCore;
+namespace Aurora.Framework.Infrastructure.Migrations;
 
 public static class MigrationServiceExtensions
 {
-    public static void MigrateDatabase<TContext>(this WebApplication application)
+    public static void MigrateDatabase<TContext>(
+        this WebApplication application)
         where TContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(application);

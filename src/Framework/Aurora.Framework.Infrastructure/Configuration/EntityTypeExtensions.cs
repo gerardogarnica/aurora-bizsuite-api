@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Aurora.Framework.Persistence.EFCore;
+namespace Aurora.Framework.Infrastructure.Configuration;
 
 public static class EntityTypeExtensions
 {
     public static void AddAuditableProperties<T>(
-        this EntityTypeBuilder<T> builder) where T : class, IAuditableEntity
+        this EntityTypeBuilder<T> builder) 
+        where T : class, IAuditableEntity
     {
         builder.Property(p => p.CreatedBy).IsRequired().HasMaxLength(100);
         builder.Property(p => p.CreatedAt).IsRequired();
@@ -14,7 +15,8 @@ public static class EntityTypeExtensions
     }
 
     public static void AddSoftDeletableProperties<T>(
-        this EntityTypeBuilder<T> builder) where T : class, ISoftDeletable
+        this EntityTypeBuilder<T> builder) 
+        where T : class, ISoftDeletable
     {
         builder.Property(p => p.IsDeleted).IsRequired();
         builder.Property(p => p.DeletedBy).HasMaxLength(100);
