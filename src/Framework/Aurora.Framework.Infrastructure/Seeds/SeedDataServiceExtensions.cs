@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 
-namespace Aurora.Framework.Persistence.EFCore;
+namespace Aurora.Framework.Infrastructure;
 
 public static class SeedDataServiceExtensions
 {
-    public static void SeedData<TContext>(this WebApplication application)
+    public static void SeedData<TContext>(
+        this WebApplication application)
         where TContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(application);
