@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Aurora.Framework.Infrastructure;
+namespace Aurora.Framework.Infrastructure.Interceptors;
 
 public sealed class SoftDeletableEntitiesInterceptor(
     IDateTimeService dateTimeProvider)

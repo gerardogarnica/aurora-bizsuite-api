@@ -1,4 +1,5 @@
 ﻿using Aurora.Framework.Application;
+using Aurora.Framework.Infrastructure.Interceptors;
 using Aurora.Framework.Infrastructure.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

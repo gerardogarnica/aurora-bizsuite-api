@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aurora.Framework.Infrastructure;
+namespace Aurora.Framework.Infrastructure.Interceptors;
 
 public sealed class PublishDomainEventsInterceptor(
     IServiceScopeFactory serviceScopeFactory)

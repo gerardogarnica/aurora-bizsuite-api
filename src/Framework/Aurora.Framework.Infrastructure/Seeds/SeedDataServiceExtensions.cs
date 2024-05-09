@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 
-namespace Aurora.Framework.Infrastructure;
+namespace Aurora.Framework.Infrastructure.Seeds;
 
 public static class SeedDataServiceExtensions
 {
