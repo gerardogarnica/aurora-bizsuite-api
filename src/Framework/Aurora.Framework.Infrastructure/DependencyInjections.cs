@@ -10,6 +10,10 @@ public static class DependencyInjections
     public static IServiceCollection AddCommonInfrastructureServices(
         this IServiceCollection services)
     {
+        services.TryAddSingleton<PublishDomainEventsInterceptor>();
+        services.TryAddSingleton<AuditableEntitiesInterceptor>();
+        services.TryAddSingleton<SoftDeletableEntitiesInterceptor>();
+
         services.TryAddSingleton<IDateTimeService, DateTimeService>();
 
         return services;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Aurora.Framework.Persistence.EFCore;
+namespace Aurora.Framework.Infrastructure;
 
 public abstract class BaseRepository<TEntity, TId>(DbContext context)
     where TEntity : AggregateRoot<TId>
