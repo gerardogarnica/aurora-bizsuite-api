@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace Aurora.Framework.Api;
+namespace Aurora.Framework.Presentation.Endpoints;
 
 public interface IBaseEndpoint
 {

@@ -4,16 +4,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
-namespace Aurora.Framework.Api;
+namespace Aurora.Framework.Presentation.Endpoints;
 
 public static class BaseEndpointExtensions
 {
-    public static IServiceCollection AddEndpoints(this IServiceCollection services)
+    public static IServiceCollection AddEndpoints(
+        this IServiceCollection services,
+        params Assembly[] assemblies)
     {
-        var serviceDescriptor = Assembly
-            .GetCallingAssembly()
-            .DefinedTypes
-            .Where(x => x.IsAssignableTo(typeof(IBaseEndpoint)))
+        ServiceDescriptor[] serviceDescriptor = assemblies
+            .SelectMany(a => a.GetTypes())
+            .Where(x => x is { IsAbstract: false, IsInterface: false } && 
+                        x.IsAssignableTo(typeof(IBaseEndpoint)))
             .Select(type => ServiceDescriptor.Transient(typeof(IBaseEndpoint), type))
             .ToArray();
 
@@ -26,13 +28,13 @@ public static class BaseEndpointExtensions
         this WebApplication app,
         RouteGroupBuilder? routeGroupBuilder = null)
     {
-        var endpoints = app.Services.GetRequiredService<IEnumerable<IBaseEndpoint>>();
+        IEnumerable<IBaseEndpoint> endpoints = app.Services.GetRequiredService<IEnumerable<IBaseEndpoint>>();
 
         IEndpointRouteBuilder builder = routeGroupBuilder is null
             ? app
             : routeGroupBuilder;
 
-        foreach (var endpoint in endpoints)
+        foreach (IBaseEndpoint endpoint in endpoints)
         {
             endpoint.MapEndpoint(builder);
         }

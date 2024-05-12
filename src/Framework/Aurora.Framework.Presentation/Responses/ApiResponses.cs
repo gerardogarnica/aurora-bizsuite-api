@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Aurora.Framework.Api;
+namespace Aurora.Framework.Presentation.Responses;
 
-public static class ResultExtensions
+public static class ApiResponses
 {
-    public static IResult ToBadRequest(this Result result)
+    public static IResult Problem(Result result)
     {
         if (result.IsSuccessful)
         {
@@ -13,7 +13,7 @@ public static class ResultExtensions
 
         return Results.Problem(
             type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-            title: "The result of the request is a failure",
+            title: $"The result of the request is a {result.Error.Code} failure",
             statusCode: StatusCodes.Status400BadRequest,
             detail: result.Error.Message,
             extensions: new Dictionary<string, object?>
