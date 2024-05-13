@@ -5,7 +5,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Aurora.Framework.Api;
+namespace Aurora.Framework.Presentation.OpenApi;
 
 public sealed class SwaggerGenOptionsSetup
     : IConfigureNamedOptions<SwaggerGenOptions>

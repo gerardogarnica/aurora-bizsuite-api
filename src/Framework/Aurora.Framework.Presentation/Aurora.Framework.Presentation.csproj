@@ -5,7 +5,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aurora.Framework.Core\Aurora.Framework.Core.csproj" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aurora.Framework.Application\Aurora.Framework.Application.csproj" />
+    <ProjectReference Include="..\Aurora.Framework.Identity\Aurora.Framework.Identity.csproj" />
   </ItemGroup>
 
 </Project>
