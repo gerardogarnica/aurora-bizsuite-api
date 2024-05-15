@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Aurora.Framework.Infrastructure\Aurora.Framework.Infrastructure.csproj" />
+    <ProjectReference Include="..\Aurora.BizSuite.Items.Application\Aurora.BizSuite.Items.Application.csproj" />
+    <ProjectReference Include="..\Aurora.BizSuite.Items.Presentation\Aurora.BizSuite.Items.Presentation.csproj" />
+  </ItemGroup>
+
+</Project>
