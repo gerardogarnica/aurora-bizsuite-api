@@ -1,6 +1,4 @@
-﻿using Aurora.Framework;
-
-namespace Aurora.BizSuite.Items.Application.Items.GetById;
+﻿namespace Aurora.BizSuite.Items.Application.Items.GetById;
 
 internal sealed class GetItemByIdQueryHandler(
     IItemRepository itemRepository)
