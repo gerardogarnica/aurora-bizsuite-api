@@ -1,6 +1,7 @@
 ﻿global using Aurora.BizSuite.Items.Domain.Categories;
 global using Aurora.BizSuite.Items.Domain.Items;
 global using Aurora.BizSuite.Items.Domain.Units;
+global using Aurora.BizSuite.Items.Infrastructure.Categories;
 global using Aurora.BizSuite.Items.Infrastructure.Database;
 global using Aurora.BizSuite.Items.Infrastructure.Items;
 global using Aurora.Framework;

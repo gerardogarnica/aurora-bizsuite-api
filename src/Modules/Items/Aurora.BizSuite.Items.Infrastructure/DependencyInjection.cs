@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ItemsDbContext>());
 
         // Repository implementations
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
 
         return services;
