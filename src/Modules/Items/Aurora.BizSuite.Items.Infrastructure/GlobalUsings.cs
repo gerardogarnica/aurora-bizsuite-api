@@ -1,0 +1,14 @@
+﻿global using Aurora.BizSuite.Items.Domain.Categories;
+global using Aurora.BizSuite.Items.Domain.Items;
+global using Aurora.BizSuite.Items.Domain.Units;
+global using Aurora.BizSuite.Items.Infrastructure.Database;
+global using Aurora.BizSuite.Items.Infrastructure.Items;
+global using Aurora.Framework;
+global using Aurora.Framework.Application;
+global using Aurora.Framework.Infrastructure;
+global using Aurora.Framework.Infrastructure.Configuration;
+global using Aurora.Framework.Infrastructure.Interceptors;
+global using Aurora.Framework.Infrastructure.Repositories;
+global using Aurora.Framework.Presentation.Endpoints;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
