@@ -7,6 +7,7 @@ internal static class UnitValidationErrors
     internal static BaseError AcronymIsRequired => new(ErrorCode, "The unit acronym is required.");
     internal static BaseError AcronymIsTooLong => new(ErrorCode, "The maximum unit acronym length is 10 characters.");
     internal static BaseError NameIsRequired => new(ErrorCode, "The unit name is required.");
+    internal static BaseError NameIsTaken => new(ErrorCode, "The unit name already exists and cannot be created again.");
     internal static BaseError NameIsTooLong => new(ErrorCode, "The maximum unit name length is 100 characters.");
     internal static BaseError NameIsTooShort => new(ErrorCode, "The minimum unit name length is 3 characters.");
     internal static BaseError NotesIsTooLong => new(ErrorCode, "The maximum unit notes length is 1000 characters.");

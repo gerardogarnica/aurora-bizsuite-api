@@ -1,34 +1,35 @@
-﻿using Aurora.BizSuite.Items.Application.Units.Create;
+﻿using Aurora.BizSuite.Items.Application.Units.Update;
 
 namespace Aurora.BizSuite.Items.Presentation.Units;
 
-internal sealed class CreateUnit : IBaseEndpoint
+internal sealed class UpdateUnit : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(
-            "units",
-            async ([FromBody] CreateUnitRequest request, ISender sender) =>
+        app.MapPut(
+            "units/{id}",
+            async (Guid id, [FromBody] UpdateUnitRequest request, ISender sender) =>
             {
-                var command = new CreateUnitCommand(
+                var command = new UpdateUnitCommand(
+                    id,
                     request.Name.Trim(),
                     request.Acronym.Trim(),
                     request.Notes?.Trim());
 
-                Result<Guid> result = await sender.Send(command);
+                Result result = await sender.Send(command);
 
                 return result.Match(
-                    () => Results.Created(string.Empty, result.Value),
+                    () => Results.Accepted(string.Empty),
                     ApiResponses.Problem);
             })
-            .WithName("CreateUnit")
+            .WithName("UpdateUnit")
             .WithTags(EndpointTags.Unit)
-            .Produces<Guid>(StatusCodes.Status201Created)
+            .Produces<Guid>(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
-    internal sealed record CreateUnitRequest(
+    internal sealed record UpdateUnitRequest(
         string Name,
         string Acronym,
         string? Notes);

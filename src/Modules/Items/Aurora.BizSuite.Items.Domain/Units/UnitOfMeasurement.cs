@@ -20,11 +20,23 @@ public class UnitOfMeasurement : AggregateRoot<UnitOfMeasurementId>
     {
         var unitOfMeasurement = new UnitOfMeasurement
         {
-            Name = name,
-            Acronym = acronym,
-            Notes = notes
+            Name = name.Trim(),
+            Acronym = acronym.Trim(),
+            Notes = notes?.Trim()
         };
 
         return unitOfMeasurement;
+    }
+
+    public Result<UnitOfMeasurement> Update(
+        string name,
+        string acronym,
+        string? notes)
+    {
+        Name = name.Trim();
+        Acronym = acronym.Trim();
+        Notes = notes?.Trim();
+
+        return this;
     }
 }
