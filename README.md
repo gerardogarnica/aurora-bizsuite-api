@@ -2,24 +2,23 @@
 
 # Aurora Biz Suite API
 
-Aurora Biz Suite is an open source ERP platform using .NET Core API.
+Aurora Biz Suite is an open source ERP platform using .NET Core 8.
 
 ## Features
 
-* Microservices
+* Modular Monolith + Microservices
 * Clean Architecture
 * Domain Driven Design
 * CQRS Pattern
 * Repository Pattern
-* Dependency injection
-* API handling middleware
 * JWT for authentication and authorization
+* Dependency injection
+* Middleware behaviors
 
 ## Technologies
 
 * [.NET](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core)
-* [AutoMapper](https://automapper.org)
 * [MediatR](https://github.com/jbogard/MediatR)
 * [FluentValidation](https://fluentvalidation.net)
 * [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
