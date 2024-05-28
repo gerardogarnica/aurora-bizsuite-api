@@ -3,9 +3,10 @@
 public sealed record CategoryModel(
     Guid Id,
     string Name,
-    Guid ParentId,
-    int LevelNumber,
-    string? Notes);
+    Guid? ParentId,
+    int Level,
+    string? Notes,
+    IReadOnlyCollection<CategoryModel> Childs);
 
 internal static class CategoryModelExtensions
 {
@@ -15,8 +16,9 @@ internal static class CategoryModelExtensions
         return new CategoryModel(
             category.Id.Value,
             category.Name,
-            category.ParentId.Value,
-            category.LevelNumber,
-            category.Notes);
+            category.ParentId?.Value,
+            category.Level,
+            category.Notes,
+            category.Childs.Select(x => x.ToCategoryModel()).ToList());
     }
 }

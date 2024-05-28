@@ -1,4 +1,6 @@
-﻿namespace Aurora.BizSuite.Items.Infrastructure.Categories;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace Aurora.BizSuite.Items.Infrastructure.Categories;
 
 internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
@@ -23,13 +25,28 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         builder
             .Property(p => p.ParentId)
-            .HasConversion(id => id.Value, value => new CategoryId(value))
-            .IsRequired();
+            .HasConversion(
+                id => id != null ? id.Value : (Guid?)null,
+                value => value.HasValue ? new CategoryId((Guid)value) : null)
+            .IsRequired(false);
 
         builder
             .Property(p => p.Notes)
             .HasMaxLength(1000);
 
         builder.AddAuditableProperties();
+
+        // Indexes
+        builder
+            .HasIndex(i => i.ParentId)
+            .HasDatabaseName("IX_Category_ParentId");
+
+        // Relationships
+        builder
+            .HasOne<Category>()
+            .WithMany(n => n.Childs)
+            .HasForeignKey(f => f.ParentId)
+            .IsRequired(false)
+            .HasConstraintName("FK_Category_Parent");
     }
 }
