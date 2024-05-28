@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-namespace Aurora.BizSuite.Items.Infrastructure.Categories;
+﻿namespace Aurora.BizSuite.Items.Infrastructure.Categories;
 
 internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
