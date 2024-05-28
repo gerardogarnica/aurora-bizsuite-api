@@ -4,4 +4,5 @@ public sealed record UpdateUnitCommand(
     Guid UnitId,
     string Name,
     string Acronym,
-    string? Notes) : ICommand;
+    string? Notes)
+    : ICommand;

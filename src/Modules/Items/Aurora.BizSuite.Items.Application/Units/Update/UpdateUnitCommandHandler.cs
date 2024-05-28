@@ -19,7 +19,7 @@ internal sealed class UpdateUnitCommandHandler(
 
         if (!await NameIsUnique(unit, request.Name))
         {
-            return Result.Fail(UnitErrors.NameIsNotUnique(request.Name));
+            return Result.Fail(UnitErrors.NameIsNotUnique);
         }
 
         // Update unit
