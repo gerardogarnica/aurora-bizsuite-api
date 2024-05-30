@@ -8,7 +8,9 @@ internal sealed class CreateCategory : IBaseEndpoint
     {
         app.MapPost(
             "categories",
-            async ([FromBody] CreateCategoryRequest request, ISender sender) =>
+            async (
+                [FromBody] CreateCategoryRequest request,
+                ISender sender) =>
             {
                 var command = new CreateCategoryCommand(
                     request.Name.Trim(),
