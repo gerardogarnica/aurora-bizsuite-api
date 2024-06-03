@@ -11,7 +11,9 @@ public sealed record ItemModel
     public string? CategoryName { get; internal set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ItemType ItemType { get; internal set; }
-    public string? AlternCode { get; internal set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ItemStatus Status { get; internal set; }
+    public string? AlternativeCode { get; internal set; }
     public string? Notes { get; internal set; }
 }
 
@@ -28,7 +30,8 @@ internal static class ItemModelExtensions
             CategoryId = item.Category.Id.Value,
             CategoryName = item.Category.Name,
             ItemType = item.ItemType,
-            AlternCode = item.AlternCode,
+            Status = item.Status,
+            AlternativeCode = item.AlternativeCode,
             Notes = item.Notes
         };
     }

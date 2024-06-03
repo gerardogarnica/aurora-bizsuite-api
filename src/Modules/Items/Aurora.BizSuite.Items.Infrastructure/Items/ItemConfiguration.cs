@@ -42,12 +42,16 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
             .HasMaxLength(20);
 
         builder
-            .Property(p => p.AlternCode)
+            .Property(p => p.AlternativeCode)
             .HasMaxLength(50);
 
         builder
             .Property(p => p.Notes)
             .HasMaxLength(1000);
+
+        builder
+            .Property(p => p.Status)
+            .IsRequired();
 
         builder.AddAuditableProperties();
 
