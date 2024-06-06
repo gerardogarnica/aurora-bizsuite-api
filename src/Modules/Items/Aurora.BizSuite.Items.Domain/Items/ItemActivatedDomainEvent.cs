@@ -1,6 +1,6 @@
 ﻿namespace Aurora.BizSuite.Items.Domain.Items;
 
-public sealed class ItemCreatedDomainEvent(Guid itemId)
+public sealed class ItemActivatedDomainEvent(Guid itemId)
     : DomainEvent
 {
     public Guid ItemId { get; init; } = itemId;
