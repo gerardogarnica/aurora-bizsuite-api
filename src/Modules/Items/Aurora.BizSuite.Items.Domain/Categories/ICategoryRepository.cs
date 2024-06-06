@@ -3,7 +3,7 @@
 public interface ICategoryRepository : IRepository<Category>
 {
     Task<Category?> GetByIdAsync(CategoryId id);
-    Task<IReadOnlyCollection<Category>> GetListAsync(Guid? parentId, string? searchTerms);
+    Task<IReadOnlyCollection<Category>> GetListAsync(CategoryId? parentId, string? searchTerms);
     Task InsertAsync(Category category);
     void Update(Category category);
 }

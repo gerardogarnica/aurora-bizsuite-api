@@ -13,7 +13,7 @@ internal sealed class CategoryRepository(
         .FirstOrDefaultAsync();
 
     public async Task<IReadOnlyCollection<Category>> GetListAsync(
-        Guid? parentId,
+        CategoryId? parentId,
         string? searchTerms)
     {
         var query = dbContext
@@ -21,9 +21,9 @@ internal sealed class CategoryRepository(
             .AsNoTracking()
             .AsQueryable();
 
-        if (parentId.HasValue)
+        if (parentId is not null)
         {
-            query = query.Where(x => x.ParentId == new CategoryId(parentId.Value));
+            query = query.Where(x => x.ParentId == parentId);
         }
         else
         {
