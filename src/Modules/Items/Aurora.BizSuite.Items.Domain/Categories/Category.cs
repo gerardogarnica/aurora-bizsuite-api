@@ -1,6 +1,6 @@
 ﻿namespace Aurora.BizSuite.Items.Domain.Categories;
 
-public class Category : AggregateRoot<CategoryId>, IAuditableEntity
+public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
 {
     private readonly List<Category> _childCategories = [];
 
@@ -14,8 +14,7 @@ public class Category : AggregateRoot<CategoryId>, IAuditableEntity
     public DateTime? UpdatedAt { get; init; }
     public IReadOnlyCollection<Category> Childs => _childCategories.AsReadOnly();
 
-    protected Category()
-        : base(new CategoryId(Guid.NewGuid()))
+    private Category() : base(new CategoryId(Guid.NewGuid()))
     {
         Name = string.Empty;
         ParentId = null;

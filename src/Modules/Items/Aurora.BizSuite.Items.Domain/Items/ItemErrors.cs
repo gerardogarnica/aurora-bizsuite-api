@@ -26,6 +26,34 @@ public static class ItemErrors
         "Items.ItemAlreadyIsActive",
         "The item is already active.");
 
+    public static BaseError ItemAlreadyIsDisabled => new(
+        "Items.ItemAlreadyIsDisabled",
+        "The item is already disabled.");
+
+    public static BaseError ItemIsDisabled => new(
+        "Items.ItemIsDisabled",
+        "The item is disabled.");
+
+    public static BaseError ItemUnitAlreadyExists => new(
+        "Items.ItemUnitAlreadyExists",
+        "The item unit already exists.");
+
+    public static BaseError ItemUnitInvalidConversionValue => new(
+        "Items.ItemUnitInvalidConversionValue",
+        "The conversion value must be greater than zero.");
+
+    public static BaseError ItemUnitIsUnableToRemove => new(
+        "Items.ItemUnitIsUnableToRemove",
+        "The item unit is unable to remove because is the item main unit.");
+
+    public static BaseError ItemUnitIsUnableToUpdate => new(
+        "Items.ItemUnitIsUnableToUpdate",
+        "The item unit is unable to update because is the item main unit.");
+
+    public static BaseError MainUnitIsUnableToUpdate => new(
+        "Items.MainUnitIsUnableToUpdate",
+        "The item main unit is unable to update because the item is already active.");
+
     public static BaseError NameIsRequired => new(
         "Items.NameIsRequired",
         "The item name is required.");

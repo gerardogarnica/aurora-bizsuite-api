@@ -1,13 +1,12 @@
 ﻿namespace Aurora.BizSuite.Items.Domain.Units;
 
-public class UnitOfMeasurement : AggregateRoot<UnitOfMeasurementId>
+public sealed class UnitOfMeasurement : AggregateRoot<UnitOfMeasurementId>
 {
     public string Name { get; private set; }
     public string Acronym { get; private set; }
     public string? Notes { get; private set; }
 
-    protected UnitOfMeasurement()
-        : base(new UnitOfMeasurementId(Guid.NewGuid()))
+    private UnitOfMeasurement() : base(new UnitOfMeasurementId(Guid.NewGuid()))
     {
         Name = string.Empty;
         Acronym = string.Empty;

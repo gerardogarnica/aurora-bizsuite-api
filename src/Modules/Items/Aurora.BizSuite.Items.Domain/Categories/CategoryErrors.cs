@@ -12,21 +12,21 @@ public static class CategoryErrors
 
     public static BaseError NameIsRequired => new(
         "Categories.NameIsRequired",
-        "The unit name is required.");
+        "The category name is required.");
 
     public static BaseError NameIsTaken => new(
         "Categories.NameIsTaken",
-        "The unit name already exists and cannot be created again.");
+        "The category name already exists and cannot be created again.");
 
     public static BaseError NameIsTooLong => new(
         "Categories.NameIsTooLong",
-        "The maximum unit name length is 100 characters.");
+        "The maximum category name length is 100 characters.");
 
     public static BaseError NameIsTooShort => new(
         "Categories.NameIsTooShort",
-        "The minimum unit name length is 3 characters.");
+        "The minimum category name length is 3 characters.");
 
     public static BaseError NotesIsTooLong => new(
         "Categories.NotesIsTooLong",
-        "The maximum unit notes length is 1000 characters.");
+        "The maximum category notes length is 1000 characters.");
 }
