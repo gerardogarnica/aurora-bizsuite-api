@@ -4,6 +4,7 @@ namespace Aurora.BizSuite.Items.Domain.Items;
 
 public sealed class ItemUnit
 {
+    public int Id { get; private set; }
     public ItemId ItemId { get; private set; }
     public UnitOfMeasurementId UnitId { get; private set; }
     public decimal ConversionValue { get; private set; }

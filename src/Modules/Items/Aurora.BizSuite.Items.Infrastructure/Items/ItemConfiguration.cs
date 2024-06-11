@@ -27,6 +27,11 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
             .IsRequired();
 
         builder
+            .Property(p => p.Code)
+            .IsRequired()
+            .HasMaxLength(40);
+
+        builder
             .Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(100);
@@ -43,7 +48,7 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
 
         builder
             .Property(p => p.AlternativeCode)
-            .HasMaxLength(50);
+            .HasMaxLength(40);
 
         builder
             .Property(p => p.Notes)

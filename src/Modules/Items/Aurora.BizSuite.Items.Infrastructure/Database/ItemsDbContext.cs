@@ -8,6 +8,7 @@ public sealed class ItemsDbContext(
 
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Item> Items { get; set; } = null!;
+    public DbSet<ItemUnit> ItemUnits { get; set; } = null!;
     public DbSet<UnitOfMeasurement> Units { get; set; } = null!;
 
     #endregion
