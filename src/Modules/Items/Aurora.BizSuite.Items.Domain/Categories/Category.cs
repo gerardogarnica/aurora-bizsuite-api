@@ -2,7 +2,7 @@
 
 public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
 {
-    private readonly List<Category> _childCategories = [];
+    private readonly List<Category> _childs = [];
 
     public string Name { get; private set; }
     public CategoryId? ParentId { get; private set; }
@@ -12,7 +12,7 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
     public DateTime CreatedAt { get; init; }
     public string? UpdatedBy { get; init; }
     public DateTime? UpdatedAt { get; init; }
-    public IReadOnlyCollection<Category> Childs => _childCategories.AsReadOnly();
+    public IReadOnlyCollection<Category> Childs => _childs.AsReadOnly();
 
     private Category() : base(new CategoryId(Guid.NewGuid()))
     {
@@ -59,7 +59,7 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
             Notes = notes?.Trim()
         };
 
-        _childCategories.Add(category);
+        _childs.Add(category);
 
         return this;
     }

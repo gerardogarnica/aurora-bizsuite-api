@@ -13,6 +13,7 @@ internal sealed class CreateCategory : IBaseEndpoint
                 ISender sender) =>
             {
                 var command = new CreateCategoryCommand(
+                    request.ParentId,
                     request.Name.Trim(),
                     request.Notes?.Trim());
 
@@ -30,6 +31,7 @@ internal sealed class CreateCategory : IBaseEndpoint
     }
 
     internal sealed record CreateCategoryRequest(
+        Guid? ParentId,
         string Name,
         string? Notes);
 }

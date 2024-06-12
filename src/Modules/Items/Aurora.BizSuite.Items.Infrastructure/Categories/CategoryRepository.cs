@@ -9,6 +9,7 @@ internal sealed class CategoryRepository(
     public override async Task<Category?> GetByIdAsync(CategoryId id) => await dbContext
         .Categories
         .Include(x => x.Childs)
+        .AsSplitQuery()
         .Where(x => x.Id == id)
         .FirstOrDefaultAsync();
 
