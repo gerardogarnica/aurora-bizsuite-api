@@ -6,9 +6,25 @@ public static class ItemErrors
         "Items.NotFound",
         $"The item with identifier {id} was not found.");
 
-    public static BaseError AlternCodeIsTooLong => new(
-        "Items.AlternCodeIsTooLong",
+    public static BaseError AlternativeCodeIsTooLong => new(
+        "Items.AlternativeCodeIsTooLong",
         "The maximum item alternative code length is 50 characters.");
+
+    public static BaseError CodeIsNotUnique => new(
+        "Items.CodeIsNotUnique",
+        "The item code already exists for another item.");
+
+    public static BaseError CodeIsRequired => new(
+        "Items.CodeIsRequired",
+        "The item code is required.");
+
+    public static BaseError CodeIsTooLong => new(
+        "Items.CodeIsTooLong",
+        "The maximum item code length is 40 characters.");
+
+    public static BaseError CodeIsTooShort => new(
+        "Items.CodeIsTooShort",
+        "The minimum item code length is 3 characters.");
 
     public static BaseError DescriptionIsRequired => new(
         "Items.DescriptionIsRequired",

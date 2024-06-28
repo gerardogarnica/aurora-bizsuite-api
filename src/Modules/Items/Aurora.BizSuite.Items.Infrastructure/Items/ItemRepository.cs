@@ -14,6 +14,14 @@ internal sealed class ItemRepository(
         .Where(x => x.Id == id)
         .FirstOrDefaultAsync();
 
+    public async Task<Item?> GetByCodeAsync(string code) => await dbContext
+        .Items
+        .Include(x => x.Category)
+        .Include(x => x.MainUnit)
+        .Include(x => x.Units)
+        .Where(x => x.Code == code)
+        .FirstOrDefaultAsync();
+
     public async Task<PagedResult<Item>> GetPagedAsync(
         PagedViewRequest paged,
         CategoryId? categoryId,
