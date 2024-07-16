@@ -89,4 +89,12 @@ public static class ItemErrors
     public static BaseError NotesIsTooLong => new(
         "Items.NotesIsTooLong",
         "The maximum item notes length is 1000 characters.");
+
+    public static BaseError TagsIsTooLong => new(
+        "Items.TagsIsTooLong",
+        "The maximum item tag length is 40 characters.");
+
+    public static BaseError TagsLimitExceeded => new(
+        "Items.TagsLimitExceeded",
+        "The maximum item tags is 100 tags.");
 }

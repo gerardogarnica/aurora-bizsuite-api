@@ -15,6 +15,7 @@ public sealed record ItemModel
     public ItemStatus Status { get; internal set; }
     public string? AlternativeCode { get; internal set; }
     public string? Notes { get; internal set; }
+    public List<string> Tags { get; internal set; } = [];
 }
 
 internal static class ItemModelExtensions
@@ -32,7 +33,8 @@ internal static class ItemModelExtensions
             ItemType = item.ItemType,
             Status = item.Status,
             AlternativeCode = item.AlternativeCode,
-            Notes = item.Notes
+            Notes = item.Notes,
+            Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")]
         };
     }
 }

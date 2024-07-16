@@ -55,6 +55,10 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
             .HasMaxLength(1000);
 
         builder
+            .Property(p => p.Tags)
+            .HasMaxLength(4000);
+
+        builder
             .Property(p => p.Status)
             .IsRequired();
 

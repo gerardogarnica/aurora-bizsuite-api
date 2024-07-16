@@ -29,6 +29,12 @@ internal sealed class CreateItemCommandValidator : AbstractValidator<CreateItemC
 
         RuleFor(x => x.Notes)
             .MaximumLength(1000).WithBaseError(ItemErrors.NotesIsTooLong);
+
+        RuleFor(x => x.Tags)
+            .Must(x => x.Count <= 100).WithBaseError(ItemErrors.TagsLimitExceeded);
+
+        RuleForEach(x => x.Tags)
+            .MaximumLength(40).WithBaseError(ItemErrors.TagsIsTooLong);
     }
 
     private async Task<bool> BeUniqueCode(string code, CancellationToken cancellationToken = default!)

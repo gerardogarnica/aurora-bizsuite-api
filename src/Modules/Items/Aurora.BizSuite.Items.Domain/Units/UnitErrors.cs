@@ -16,7 +16,7 @@ public static class UnitErrors
 
     public static BaseError NameIsNotUnique => new(
         "Units.NameIsNotUnique",
-        $"The unit name already exists for another unit of measurement.");
+        "The unit name already exists for another unit of measurement.");
 
     public static BaseError NameIsRequired => new(
         "Units.NameIsRequired",

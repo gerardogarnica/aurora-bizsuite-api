@@ -8,5 +8,6 @@ public sealed record CreateItemCommand(
     ItemType Type,
     Guid MainUnitId,
     string? AlternativeCode,
-    string? Notes)
+    string? Notes,
+    List<string> Tags)
     : ICommand<Guid>;

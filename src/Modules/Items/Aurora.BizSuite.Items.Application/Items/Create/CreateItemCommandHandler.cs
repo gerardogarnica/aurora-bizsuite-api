@@ -33,7 +33,8 @@ internal sealed class CreateItemCommandHandler(
             request.Type,
             mainUnit,
             request.AlternativeCode,
-            request.Notes);
+            request.Notes,
+            request.Tags);
 
         await itemRepository.InsertAsync(item);
 

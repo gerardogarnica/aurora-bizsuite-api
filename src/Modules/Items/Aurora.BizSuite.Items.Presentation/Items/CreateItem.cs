@@ -18,7 +18,8 @@ internal sealed class CreateItem : IBaseEndpoint
                     ToType(request.Type),
                     request.MainUnitId,
                     request.AlternativeCode,
-                    request.Notes);
+                    request.Notes,
+                    request.Tags);
 
                 Result<Guid> result = await sender.Send(command);
 
@@ -48,7 +49,8 @@ internal sealed class CreateItem : IBaseEndpoint
         CreateItemType Type,
         Guid MainUnitId,
         string? AlternativeCode,
-        string? Notes);
+        string? Notes,
+        List<string> Tags);
 
     internal enum CreateItemType
     {

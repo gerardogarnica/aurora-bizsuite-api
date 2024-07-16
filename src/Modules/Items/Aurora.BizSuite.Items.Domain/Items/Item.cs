@@ -15,6 +15,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     public UnitOfMeasurementId MainUnitId { get; private set; }
     public string? AlternativeCode { get; private set; }
     public string? Notes { get; private set; }
+    public string? Tags { get; private set; }
     public ItemStatus Status { get; private set; }
     public string? CreatedBy { get; init; }
     public DateTime CreatedAt { get; init; }
@@ -41,7 +42,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         ItemType itemType,
         UnitOfMeasurement mainUnit,
         string? alternativeCode,
-        string? notes)
+        string? notes,
+        List<string> tags)
     {
         var item = new Item
         {
@@ -54,6 +56,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             AlternativeCode = alternativeCode?.Trim(),
             Notes = notes?.Trim(),
             Status = ItemStatus.Draft,
+            Tags = string.Join(";", tags)
         };
 
         var itemUnit = new ItemUnit(
