@@ -10,6 +10,10 @@ public static class CategoryErrors
         "Categories.ChildCategoryNotFound",
         $"The category with identifier {childId} does not belong to the category '{name}'.");
 
+    public static BaseError MaxNumberOfLevelsReached => new(
+        "Categories.MaxNumberOfLevelsReached",
+        "The maximum number of levels has been reached.");
+
     public static BaseError NameIsRequired => new(
         "Categories.NameIsRequired",
         "The category name is required.");

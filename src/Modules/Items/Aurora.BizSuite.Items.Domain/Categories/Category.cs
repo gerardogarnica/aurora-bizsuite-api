@@ -2,6 +2,8 @@
 
 public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
 {
+    const int maxNumberOfLevels = 4;
+
     private readonly List<Category> _childs = [];
 
     public string Name { get; private set; }
@@ -51,6 +53,9 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
         string name,
         string? notes)
     {
+        if (Level >= maxNumberOfLevels)
+            return Result.Fail<Category>(CategoryErrors.MaxNumberOfLevelsReached);
+
         var category = new Category
         {
             Name = name.Trim(),
