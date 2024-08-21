@@ -8,9 +8,14 @@ internal sealed class GetCategoryListQueryHandler(
         GetCategoryListQuery request,
         CancellationToken cancellationToken)
     {
+        // Get category ID
+        CategoryId? categoryId = request.ParentId.HasValue
+            ? new CategoryId(request.ParentId.Value)
+            : null;
+
         // Get categories
         IReadOnlyCollection<Category> categories = await categoryRepository.GetListAsync(
-            request.ParentId,
+            categoryId,
             request.SearchTerms);
 
         // Return result

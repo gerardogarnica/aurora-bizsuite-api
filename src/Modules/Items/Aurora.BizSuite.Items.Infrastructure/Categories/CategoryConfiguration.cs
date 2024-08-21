@@ -22,6 +22,11 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasMaxLength(100);
 
         builder
+            .Property(p => p.Code)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        builder
             .Property(p => p.ParentId)
             .HasConversion(
                 id => id != null ? id.Value : (Guid?)null,
@@ -31,6 +36,8 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder
             .Property(p => p.Notes)
             .HasMaxLength(1000);
+
+        builder.Property(p => p.IsLocked).IsRequired();
 
         builder.AddAuditableProperties();
 

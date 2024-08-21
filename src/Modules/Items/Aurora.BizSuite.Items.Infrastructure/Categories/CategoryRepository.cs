@@ -19,6 +19,7 @@ internal sealed class CategoryRepository(
     {
         var query = dbContext
             .Categories
+            .Include(x => x.Childs)
             .AsNoTracking()
             .AsQueryable();
 

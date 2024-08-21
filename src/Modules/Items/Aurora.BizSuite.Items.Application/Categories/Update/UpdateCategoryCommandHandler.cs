@@ -13,7 +13,7 @@ internal sealed class UpdateCategoryCommandHandler(
 
         if (category is null)
         {
-            return Result.Fail(CategoryErrors.ChildCategoryNotFound(request.CategoryId, request.Name));
+            return Result.Fail(CategoryErrors.NotFound(request.CategoryId));
         }
 
         // Update category

@@ -1,4 +1,6 @@
-﻿namespace Aurora.BizSuite.Items.Application.Categories.Create;
+﻿using Aurora.Framework;
+
+namespace Aurora.BizSuite.Items.Application.Categories.Create;
 
 internal sealed class CreateCategoryCommandHandler(
     ICategoryRepository categoryRepository)
@@ -10,31 +12,40 @@ internal sealed class CreateCategoryCommandHandler(
     {
         Category? category;
 
-        // Get the parent category
-        Category? parentCategory;
         if (request.ParentId.HasValue)
         {
+            // Get the parent category
             var parentCategoryId = new CategoryId(request.ParentId.Value);
-            parentCategory = await categoryRepository.GetByIdAsync(parentCategoryId);
+            Category? parentCategory = await categoryRepository.GetByIdAsync(parentCategoryId);
 
-            if (parentCategory == null)
+            if (parentCategory is null)
             {
                 return Result.Fail<Guid>(CategoryErrors.NotFound(request.ParentId.Value));
             }
 
             // Add child category
-            category = parentCategory.AddChild(
+            var result = parentCategory.AddChild(
                 request.Name,
-                request.Notes).Value;
+                request.Notes);
+
+            if (!result.IsSuccessful)
+            {
+                return Result.Fail<Guid>(result.Error);
+            }
+
+            category = result.Value;
 
             categoryRepository.Update(category);
         }
         else
         {
+            var list = await categoryRepository.GetListAsync(null, null);
+
             // Create category
             category = Category.Create(
                 request.Name,
-                request.Notes);
+                request.Notes,
+                list.Count);
 
             await categoryRepository.InsertAsync(category);
         }

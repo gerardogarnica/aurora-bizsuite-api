@@ -10,6 +10,18 @@ public static class CategoryErrors
         "Categories.ChildCategoryNotFound",
         $"The category with identifier {childId} does not belong to the category '{name}'.");
 
+    public static BaseError CategoryIsAlreadyLocked => new(
+        "Categories.CategoryIsAlreadyLocked",
+        "The category is already locked and cannot be locked again.");
+
+    public static BaseError CategoryIsLocked => new(
+        "Categories.CategoryIsLocked",
+        "The category is locked.");
+
+    public static BaseError CategoryIsNotLeaf => new(
+        "Categories.CategoryIsNotLeaf",
+        "The category is not a leaf node.");
+
     public static BaseError MaxNumberOfLevelsReached => new(
         "Categories.MaxNumberOfLevelsReached",
         "The maximum number of levels has been reached.");
@@ -33,4 +45,8 @@ public static class CategoryErrors
     public static BaseError NotesIsTooLong => new(
         "Categories.NotesIsTooLong",
         "The maximum category notes length is 1000 characters.");
+
+    public static BaseError UnableToAddChildToLockedCategory => new(
+        "Categories.UnableToAddChildToLockedCategory",
+        "Cannot add a category because the parent category is locked.");
 }
