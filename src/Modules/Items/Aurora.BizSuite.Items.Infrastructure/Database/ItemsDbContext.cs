@@ -6,6 +6,7 @@ public sealed class ItemsDbContext(
 {
     #region DbSet properties
 
+    public DbSet<Brand> Brands { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Item> Items { get; set; } = null!;
     public DbSet<ItemUnit> ItemUnits { get; set; } = null!;
