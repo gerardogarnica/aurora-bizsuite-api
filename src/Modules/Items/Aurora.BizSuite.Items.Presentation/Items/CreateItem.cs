@@ -27,7 +27,7 @@ internal sealed class CreateItem : IBaseEndpoint
                     () => Results.Created(string.Empty, result.Value),
                     ApiResponses.Problem);
             })
-            .WithName("CreateProduct")
+            .WithName("CreateItem")
             .WithTags(EndpointTags.Item)
             .Produces<Guid>(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)

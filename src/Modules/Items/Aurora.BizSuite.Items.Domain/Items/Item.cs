@@ -72,7 +72,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         string description,
         Brand brand,
         string? alternativeCode,
-        string? notes)
+        string? notes,
+        List<string> tags)
     {
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
@@ -82,6 +83,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         BrandId = brand.Id;
         AlternativeCode = alternativeCode?.Trim();
         Notes = notes?.Trim();
+        Tags = string.Join(";", tags);
 
         AddDomainEvent(new ItemUpdatedDomainEvent(Id.Value));
 
