@@ -6,6 +6,10 @@ public static class BrandErrors
         "Brands.NotFound",
         $"The brand with identifier {id} was not found.");
 
+    public static BaseError LogoUriIsTooLong => new(
+        "Brands.LogoUriIsTooLong",
+        "The maximum brand logo URI length is 200 characters.");
+
     public static BaseError NameIsNotUnique => new(
         "Brands.NameIsNotUnique",
         "The brand name already exists for another brand.");
@@ -21,4 +25,8 @@ public static class BrandErrors
     public static BaseError NameIsTooShort => new(
         "Brands.NameIsTooShort",
         "The minimum brand name length is 3 characters.");
+
+    public static BaseError NotesIsTooLong => new(
+        "Brands.NotesIsTooLong",
+        "The maximum brand notes length is 1000 characters.");
 }

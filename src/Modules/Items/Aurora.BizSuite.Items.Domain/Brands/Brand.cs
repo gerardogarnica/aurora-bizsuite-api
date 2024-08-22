@@ -10,7 +10,7 @@ public sealed class Brand : AggregateRoot<BrandId>, IAuditableEntity
     public string? UpdatedBy { get; init; }
     public DateTime? UpdatedAt { get; init; }
 
-    private Brand() : base(new BrandId(Guid.Empty))
+    private Brand() : base(new BrandId(Guid.NewGuid()))
     {
         Name = string.Empty;
     }

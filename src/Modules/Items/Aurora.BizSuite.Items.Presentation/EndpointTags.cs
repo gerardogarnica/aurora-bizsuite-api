@@ -2,6 +2,7 @@
 
 internal static class EndpointTags
 {
+    internal const string Brand = "Brand";
     internal const string Category = "Category";
     internal const string Item = "Item";
     internal const string Unit = "Unit";
