@@ -6,14 +6,6 @@ public static class UnitErrors
         "Units.NotFound",
         $"The unit with identifier {id} was not found.");
 
-    public static BaseError AcronymIsRequired => new(
-        "Units.AcronymIsRequired",
-        "The unit acronym is required.");
-
-    public static BaseError AcronymIsTooLong => new(
-        "Units.AcronymIsTooLong", 
-        "The maximum unit acronym length is 10 characters.");
-
     public static BaseError NameIsNotUnique => new(
         "Units.NameIsNotUnique",
         "The unit name already exists for another unit of measurement.");
@@ -33,4 +25,12 @@ public static class UnitErrors
     public static BaseError NotesIsTooLong => new(
         "Units.NotesIsTooLong",
         "The maximum unit notes length is 1000 characters.");
+
+    public static BaseError SymbolIsRequired => new(
+        "Units.SymbolIsRequired",
+        "The unit symbol is required.");
+
+    public static BaseError SymbolIsTooLong => new(
+        "Units.SymbolIsTooLong",
+        "The maximum unit symbol length is 10 characters.");
 }

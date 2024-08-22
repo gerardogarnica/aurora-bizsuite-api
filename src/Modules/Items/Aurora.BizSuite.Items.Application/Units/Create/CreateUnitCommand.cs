@@ -2,6 +2,6 @@
 
 public sealed record CreateUnitCommand(
     string Name,
-    string Acronym,
+    string Symbol,
     string? Notes)
     : ICommand<Guid>;

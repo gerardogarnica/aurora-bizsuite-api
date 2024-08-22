@@ -3,7 +3,7 @@
 public sealed record UnitOfMeasurementModel(
     Guid Id,
     string Name,
-    string Acronym,
+    string Symbol,
     string? Notes);
 
 internal static class UnitModelExtensions
@@ -14,7 +14,7 @@ internal static class UnitModelExtensions
         return new UnitOfMeasurementModel(
             unit.Id.Value,
             unit.Name,
-            unit.Acronym,
+            unit.Symbol,
             unit.Notes);
     }
 }

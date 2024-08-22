@@ -12,7 +12,7 @@ internal sealed class CreateUnit : IBaseEndpoint
             {
                 var command = new CreateUnitCommand(
                     request.Name.Trim(),
-                    request.Acronym.Trim(),
+                    request.Symbol.Trim(),
                     request.Notes?.Trim());
 
                 Result<Guid> result = await sender.Send(command);
@@ -30,6 +30,6 @@ internal sealed class CreateUnit : IBaseEndpoint
 
     internal sealed record CreateUnitRequest(
         string Name,
-        string Acronym,
+        string Symbol,
         string? Notes);
 }

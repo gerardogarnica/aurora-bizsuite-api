@@ -13,7 +13,7 @@ internal sealed class UpdateUnit : IBaseEndpoint
                 var command = new UpdateUnitCommand(
                     id,
                     request.Name.Trim(),
-                    request.Acronym.Trim(),
+                    request.Symbol.Trim(),
                     request.Notes?.Trim());
 
                 Result result = await sender.Send(command);
@@ -31,6 +31,6 @@ internal sealed class UpdateUnit : IBaseEndpoint
 
     internal sealed record UpdateUnitRequest(
         string Name,
-        string Acronym,
+        string Symbol,
         string? Notes);
 }

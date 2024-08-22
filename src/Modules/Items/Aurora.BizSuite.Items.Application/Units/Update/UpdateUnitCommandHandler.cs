@@ -25,7 +25,7 @@ internal sealed class UpdateUnitCommandHandler(
         // Update unit
         var result = unit.Update(
             request.Name,
-            request.Acronym,
+            request.Symbol,
             request.Notes);
 
         if (!result.IsSuccessful)

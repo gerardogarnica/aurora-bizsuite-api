@@ -22,12 +22,14 @@ internal class UnitOfMeasurementConfiguration : IEntityTypeConfiguration<UnitOfM
             .HasMaxLength(100);
 
         builder
-            .Property(p => p.Acronym)
+            .Property(p => p.Symbol)
             .IsRequired()
             .HasMaxLength(10);
 
         builder
             .Property(p => p.Notes)
             .HasMaxLength(1000);
+
+        builder.AddAuditableProperties();
     }
 }

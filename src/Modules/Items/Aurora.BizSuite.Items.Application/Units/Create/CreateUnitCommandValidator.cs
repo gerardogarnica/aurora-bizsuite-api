@@ -14,9 +14,9 @@ internal sealed class CreateUnitCommandValidator : AbstractValidator<CreateUnitC
             .MaximumLength(100).WithBaseError(UnitErrors.NameIsTooLong)
             .MustAsync(BeUniqueName).WithBaseError(UnitErrors.NameIsNotUnique);
 
-        RuleFor(x => x.Acronym)
-            .NotEmpty().WithBaseError(UnitErrors.AcronymIsRequired)
-            .MaximumLength(10).WithBaseError(UnitErrors.AcronymIsTooLong);
+        RuleFor(x => x.Symbol)
+            .NotEmpty().WithBaseError(UnitErrors.SymbolIsRequired)
+            .MaximumLength(10).WithBaseError(UnitErrors.SymbolIsTooLong);
 
         RuleFor(x => x.Notes)
             .MaximumLength(1000).WithBaseError(UnitErrors.NotesIsTooLong);

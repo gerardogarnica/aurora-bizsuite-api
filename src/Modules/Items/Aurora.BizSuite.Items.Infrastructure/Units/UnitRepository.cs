@@ -24,7 +24,7 @@ internal sealed class UnitRepository(
         {
             query = query.Where(x =>
                 x.Name.Contains(searchTerms)
-                || x.Acronym.Contains(searchTerms));
+                || x.Symbol.Contains(searchTerms));
         }
 
         return await ToPagedResultAsync(query.OrderBy(x => x.Name), paged);

@@ -11,7 +11,7 @@ internal sealed class CreateUnitCommandHandler(
         // Create unit
         var unit = UnitOfMeasurement.Create(
             request.Name,
-            request.Acronym,
+            request.Symbol,
             request.Notes);
 
         await unitRepository.InsertAsync(unit);
