@@ -1,14 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using Aurora.BizSuite.Items.Application.Brands;
+using Aurora.BizSuite.Items.Application.Categories;
+using System.Text.Json.Serialization;
 
 namespace Aurora.BizSuite.Items.Application.Items;
 
 public sealed record ItemModel
 {
     public Guid ItemId { get; internal set; }
+    public string? Code { get; internal set; }
     public string? Name { get; internal set; }
     public string? Description { get; internal set; }
-    public Guid CategoryId { get; internal set; }
-    public string? CategoryName { get; internal set; }
+    public CategoryModel? Category { get; internal set; }
+    public BrandModel? Brand { get; internal set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ItemType ItemType { get; internal set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -26,10 +29,11 @@ internal static class ItemModelExtensions
         return new ItemModel
         {
             ItemId = item.Id.Value,
+            Code = item.Code,
             Name = item.Name,
             Description = item.Description,
-            CategoryId = item.Category.Id.Value,
-            CategoryName = item.Category.Name,
+            Category = item.Category.ToCategoryModel(),
+            Brand = item.Brand.ToBrandModel(),
             ItemType = item.ItemType,
             Status = item.Status,
             AlternativeCode = item.AlternativeCode,
