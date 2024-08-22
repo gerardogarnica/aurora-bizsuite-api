@@ -23,10 +23,11 @@ internal class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
             .IsRequired();
 
         builder.Property(p => p.ItemId).IsRequired();
-        builder.Property(p => p.ConversionValue).HasColumnType("decimal(9,4)").IsRequired();
+        builder.Property(p => p.IsPrimary).IsRequired();
         builder.Property(p => p.AvailableForReceipt).IsRequired();
         builder.Property(p => p.AvailableForDispatch).IsRequired();
         builder.Property(p => p.UseDecimals).IsRequired();
+        builder.Property(p => p.IsEditable).IsRequired();
 
         // Indexes
         builder

@@ -1,18 +1,21 @@
-﻿using Aurora.BizSuite.Items.Domain.Categories;
+﻿using Aurora.BizSuite.Items.Domain.Brands;
+using Aurora.BizSuite.Items.Domain.Categories;
 using Aurora.BizSuite.Items.Domain.Units;
 
 namespace Aurora.BizSuite.Items.Domain.Items;
 
 public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 {
+    const int maxNumberOfUnits = 9;
+
     private readonly List<ItemUnit> _units = [];
 
     public string Code { get; private set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
     public CategoryId CategoryId { get; private set; }
+    public BrandId BrandId { get; private set; }
     public ItemType ItemType { get; private set; }
-    public UnitOfMeasurementId MainUnitId { get; private set; }
     public string? AlternativeCode { get; private set; }
     public string? Notes { get; private set; }
     public string? Tags { get; private set; }
@@ -22,7 +25,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     public string? UpdatedBy { get; init; }
     public DateTime? UpdatedAt { get; init; }
     public Category Category { get; init; } = null!;
-    public UnitOfMeasurement MainUnit { get; init; } = null!;
+    public Brand Brand { get; init; } = null!;
     public IReadOnlyCollection<ItemUnit> Units => _units.AsReadOnly();
 
     private Item() : base(new ItemId(Guid.NewGuid()))
@@ -31,7 +34,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         Name = string.Empty;
         Description = string.Empty;
         CategoryId = null!;
-        MainUnitId = null!;
+        BrandId = null!;
     }
 
     public static Item Create(
@@ -39,8 +42,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         string name,
         string description,
         Category category,
+        Brand brand,
         ItemType itemType,
-        UnitOfMeasurement mainUnit,
         string? alternativeCode,
         string? notes,
         List<string> tags)
@@ -51,23 +54,13 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             Name = name.Trim(),
             Description = description.Trim(),
             CategoryId = category.Id,
+            BrandId = brand.Id,
             ItemType = itemType,
-            MainUnitId = mainUnit.Id,
             AlternativeCode = alternativeCode?.Trim(),
             Notes = notes?.Trim(),
             Status = ItemStatus.Draft,
             Tags = string.Join(";", tags)
         };
-
-        var itemUnit = new ItemUnit(
-            item.Id,
-            mainUnit.Id,
-            1.00m,
-            true,
-            true,
-            false);
-
-        item._units.Add(itemUnit);
 
         item.AddDomainEvent(new ItemCreatedDomainEvent(item.Id.Value));
 
@@ -77,22 +70,16 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     public Result<Item> Update(
         string name,
         string description,
-        UnitOfMeasurement mainUnit,
+        Brand brand,
         string? alternativeCode,
         string? notes)
     {
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
-        if (Status is ItemStatus.Active)
-        {
-            if (mainUnit.Id != MainUnitId)
-                return Result.Fail<Item>(ItemErrors.MainUnitIsUnableToUpdate);
-        }
-
         Name = name.Trim();
         Description = description.Trim();
-        MainUnitId = mainUnit.Id;
+        BrandId = brand.Id;
         AlternativeCode = alternativeCode?.Trim();
         Notes = notes?.Trim();
 
@@ -106,6 +93,9 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         if (Status is ItemStatus.Active)
             return Result.Fail<Item>(ItemErrors.ItemAlreadyIsActive);
 
+        if (_units.Count == 0)
+            return Result.Fail<Item>(ItemErrors.ItemWithoutUnits);
+
         Status = ItemStatus.Active;
 
         AddDomainEvent(new ItemActivatedDomainEvent(Id.Value));
@@ -113,7 +103,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         return this;
     }
 
-    public Result<Item> Disable(string reason)
+    public Result<Item> Disable()
     {
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemAlreadyIsDisabled);
@@ -127,42 +117,41 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 
     public Result<Item> AddUnit(
         UnitOfMeasurement unit,
-        decimal conversionValue,
         bool availableForReceipt,
         bool availableForDispatch,
         bool useDecimals)
     {
-        if (conversionValue <= decimal.Zero)
-            return Result.Fail<Item>(ItemErrors.ItemUnitInvalidConversionValue);
-
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (_units.Any(x => x.UnitId == unit.Id))
             return Result.Fail<Item>(ItemErrors.ItemUnitAlreadyExists);
 
-        _units.Add(new ItemUnit(
+        if (_units.Count >= maxNumberOfUnits)
+            return Result.Fail<Item>(ItemErrors.MaxNumberOfUnitsReached);
+
+        var isPrimary = _units.Count == 0;
+
+        var itemUnit = ItemUnit.Create(
             Id,
             unit.Id,
-            conversionValue,
+            isPrimary,
             availableForReceipt,
             availableForDispatch,
-            useDecimals));
+            useDecimals);
+
+        _units.Add(itemUnit);
 
         return this;
     }
 
     public Result<Item> UpdateUnit(
         UnitOfMeasurement unit,
-        decimal conversionValue,
         bool availableForReceipt,
         bool availableForDispatch,
         bool useDecimals)
     {
         var itemUnit = _units.FirstOrDefault(x => x.UnitId == unit.Id);
-
-        if (conversionValue <= decimal.Zero)
-            return Result.Fail<Item>(ItemErrors.ItemUnitInvalidConversionValue);
 
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
@@ -170,11 +159,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         if (itemUnit is null)
             return Result.Fail<Item>(UnitErrors.NotFound(unit.Id.Value));
 
-        if (itemUnit.UnitId == MainUnitId)
-            return Result.Fail<Item>(ItemErrors.ItemUnitIsUnableToUpdate);
-
         itemUnit.Update(
-            conversionValue,
+            itemUnit.IsPrimary,
             availableForReceipt,
             availableForDispatch,
             useDecimals);
@@ -192,11 +178,48 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         if (itemUnit is null)
             return Result.Fail<Item>(UnitErrors.NotFound(unit.Id.Value));
 
-        if (itemUnit.UnitId == MainUnitId)
+        if (itemUnit.IsPrimary)
             return Result.Fail<Item>(ItemErrors.ItemUnitIsUnableToRemove);
 
         _units.Remove(itemUnit);
 
         return this;
+    }
+
+    public Result<Item> SetPrimaryUnit(UnitOfMeasurement unit)
+    {
+        var itemUnit = _units.FirstOrDefault(x => x.UnitId == unit.Id);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (itemUnit is null)
+            return Result.Fail<Item>(UnitErrors.NotFound(unit.Id.Value));
+
+        if (itemUnit.IsPrimary)
+            return Result.Fail<Item>(ItemErrors.ItemUnitIsPrimary);
+
+        RemovePrimaryUnit();
+
+        itemUnit.Update(
+            true,
+            itemUnit.AvailableForReceipt,
+            itemUnit.AvailableForDispatch,
+            itemUnit.UseDecimals);
+
+        return this;
+    }
+
+    private void RemovePrimaryUnit()
+    {
+        var itemUnit = _units.FirstOrDefault(x => x.IsPrimary);
+
+        if (itemUnit is null) return;
+
+        itemUnit.Update(
+            false,
+            itemUnit.AvailableForReceipt,
+            itemUnit.AvailableForDispatch,
+            itemUnit.UseDecimals);
     }
 }

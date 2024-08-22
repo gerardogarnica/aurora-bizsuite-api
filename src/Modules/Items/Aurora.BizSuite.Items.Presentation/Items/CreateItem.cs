@@ -15,8 +15,8 @@ internal sealed class CreateItem : IBaseEndpoint
                     request.Name,
                     request.Description,
                     request.CategoryId,
+                    request.BrandId,
                     ToType(request.Type),
-                    request.MainUnitId,
                     request.AlternativeCode,
                     request.Notes,
                     request.Tags);
@@ -38,6 +38,7 @@ internal sealed class CreateItem : IBaseEndpoint
     {
         CreateItemType.Product => Domain.Items.ItemType.Product,
         CreateItemType.Service => Domain.Items.ItemType.Service,
+        CreateItemType.Bundle => Domain.Items.ItemType.Bundle,
         _ => Domain.Items.ItemType.Product,
     };
 
@@ -46,8 +47,8 @@ internal sealed class CreateItem : IBaseEndpoint
         string Name,
         string Description,
         Guid CategoryId,
+        Guid BrandId,
         CreateItemType Type,
-        Guid MainUnitId,
         string? AlternativeCode,
         string? Notes,
         List<string> Tags);
@@ -55,6 +56,7 @@ internal sealed class CreateItem : IBaseEndpoint
     internal enum CreateItemType
     {
         Product,
-        Service
+        Service,
+        Bundle
     }
 }

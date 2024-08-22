@@ -22,8 +22,8 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
             .IsRequired();
 
         builder
-            .Property(p => p.MainUnitId)
-            .HasConversion(id => id.Value, value => new UnitOfMeasurementId(value))
+            .Property(p => p.BrandId)
+            .HasConversion(id => id.Value, value => new BrandId(value))
             .IsRequired();
 
         builder
@@ -66,8 +66,17 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
 
         // Indexes
         builder
+            .HasIndex(i => i.Code)
+            .IsUnique()
+            .HasDatabaseName("UK_Item");
+
+        builder
             .HasIndex(i => i.CategoryId)
             .HasDatabaseName("IX_Item_CategoryId");
+
+        builder
+            .HasIndex(i => i.BrandId)
+            .HasDatabaseName("IX_Item_BrandId");
 
         // Relationships
         builder
@@ -78,10 +87,10 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
             .IsRequired();
 
         builder
-            .HasOne(e => e.MainUnit)
+            .HasOne(e => e.Brand)
             .WithMany()
-            .HasForeignKey(e => e.MainUnitId)
-            .HasConstraintName("FK_Item_UnitOfMeasurement")
+            .HasForeignKey(e => e.BrandId)
+            .HasConstraintName("FK_Item_Brand")
             .IsRequired();
     }
 }

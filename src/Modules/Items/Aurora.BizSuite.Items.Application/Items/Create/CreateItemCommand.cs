@@ -5,8 +5,8 @@ public sealed record CreateItemCommand(
     string Name,
     string Description,
     Guid CategoryId,
+    Guid BrandId,
     ItemType Type,
-    Guid MainUnitId,
     string? AlternativeCode,
     string? Notes,
     List<string> Tags)

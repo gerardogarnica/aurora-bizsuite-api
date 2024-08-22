@@ -3,7 +3,7 @@
 internal sealed class CreateItemCommandHandler(
     IItemRepository itemRepository,
     ICategoryRepository categoryRepository,
-    IUnitRepository unitRepository)
+    IBrandRepository brandRepository)
     : ICommandHandler<CreateItemCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(
@@ -17,11 +17,21 @@ internal sealed class CreateItemCommandHandler(
             return Result.Fail<Guid>(CategoryErrors.NotFound(request.CategoryId));
         }
 
-        // Get the unit of measurement
-        var mainUnit = await unitRepository.GetByIdAsync(new UnitOfMeasurementId(request.MainUnitId));
-        if (mainUnit is null)
+        if (category.IsLocked)
         {
-            return Result.Fail<Guid>(UnitErrors.NotFound(request.MainUnitId));
+            return Result.Fail<Guid>(CategoryErrors.CategoryIsLocked);
+        }
+
+        if (!category.IsLeaf)
+        {
+            return Result.Fail<Guid>(CategoryErrors.CategoryIsNotLeaf);
+        }
+
+        // Get the brand
+        var brand = await brandRepository.GetByIdAsync(new BrandId(request.BrandId));
+        if (brand is null)
+        {
+            return Result.Fail<Guid>(BrandErrors.NotFound(request.BrandId));
         }
 
         // Create item
@@ -30,8 +40,8 @@ internal sealed class CreateItemCommandHandler(
             request.Name,
             request.Description,
             category,
+            brand,
             request.Type,
-            mainUnit,
             request.AlternativeCode,
             request.Notes,
             request.Tags);

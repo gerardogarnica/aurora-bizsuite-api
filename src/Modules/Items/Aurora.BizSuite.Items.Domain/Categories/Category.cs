@@ -16,13 +16,7 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
     public string? Notes { get; private set; }
     public bool IsLocked { get; private set; }
     [NotMapped]
-    public bool IsLeaf
-    {
-        get
-        {
-            return Level == maxNumberOfLevels;
-        }
-    }
+    public bool IsLeaf => Level == maxNumberOfLevels;
     public string? CreatedBy { get; init; }
     public DateTime CreatedAt { get; init; }
     public string? UpdatedBy { get; init; }

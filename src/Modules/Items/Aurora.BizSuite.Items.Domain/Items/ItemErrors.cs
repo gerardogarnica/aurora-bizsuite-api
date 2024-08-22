@@ -54,21 +54,21 @@ public static class ItemErrors
         "Items.ItemUnitAlreadyExists",
         "The item unit already exists.");
 
-    public static BaseError ItemUnitInvalidConversionValue => new(
-        "Items.ItemUnitInvalidConversionValue",
-        "The conversion value must be greater than zero.");
+    public static BaseError ItemUnitIsPrimary => new(
+        "Items.ItemUnitIsPrimary",
+        "The item unit is already the primary unit.");
 
     public static BaseError ItemUnitIsUnableToRemove => new(
         "Items.ItemUnitIsUnableToRemove",
-        "The item unit is unable to remove because is the item main unit.");
+        "The item unit is unable to remove because is the primary unit.");
 
-    public static BaseError ItemUnitIsUnableToUpdate => new(
-        "Items.ItemUnitIsUnableToUpdate",
-        "The item unit is unable to update because is the item main unit.");
+    public static BaseError ItemWithoutUnits => new(
+        "Items.ItemWithoutUnits",
+        "The item has no units of measurement.");
 
-    public static BaseError MainUnitIsUnableToUpdate => new(
-        "Items.MainUnitIsUnableToUpdate",
-        "The item main unit is unable to update because the item is already active.");
+    public static BaseError MaxNumberOfUnitsReached => new(
+        "Items.MaxNumberOfUnitsReached",
+        "The maximum number of units has been reached.");
 
     public static BaseError NameIsRequired => new(
         "Items.NameIsRequired",
