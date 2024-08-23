@@ -90,7 +90,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         return this;
     }
 
-    public Result<Item> Activate()
+    public Result<Item> Enable()
     {
         if (Status is ItemStatus.Active)
             return Result.Fail<Item>(ItemErrors.ItemAlreadyIsActive);
