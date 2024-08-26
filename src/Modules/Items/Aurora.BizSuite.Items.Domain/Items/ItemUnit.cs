@@ -4,7 +4,7 @@ namespace Aurora.BizSuite.Items.Domain.Items;
 
 public sealed class ItemUnit
 {
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
     public ItemId ItemId { get; private set; }
     public UnitOfMeasurementId UnitId { get; private set; }
     public bool IsPrimary { get; private set; }
@@ -15,6 +15,7 @@ public sealed class ItemUnit
 
     private ItemUnit()
     {
+        Id = Guid.NewGuid();
         ItemId = new ItemId(Guid.Empty);
         UnitId = new UnitOfMeasurementId(Guid.Empty);
     }
