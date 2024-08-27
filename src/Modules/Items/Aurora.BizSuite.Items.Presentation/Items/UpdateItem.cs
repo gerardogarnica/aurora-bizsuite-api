@@ -11,7 +11,7 @@ internal sealed class UpdateItem : IBaseEndpoint
             async (Guid id, [FromBody] UpdateItemRequest request, ISender sender) =>
             {
                 var command = new UpdateItemCommand(
-                    request.ItemId,
+                    id,
                     request.Name,
                     request.Description,
                     request.BrandId,
@@ -33,7 +33,6 @@ internal sealed class UpdateItem : IBaseEndpoint
     }
 
     internal sealed record UpdateItemRequest(
-        Guid ItemId,
         string Name,
         string Description,
         Guid BrandId,

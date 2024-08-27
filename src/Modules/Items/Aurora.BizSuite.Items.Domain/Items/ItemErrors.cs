@@ -42,9 +42,29 @@ public static class ItemErrors
         "Items.ItemAlreadyIsActive",
         "The item is already active.");
 
+    public static BaseError ItemDescriptionAlreadyExists => new(
+        "Items.ItemDescriptionAlreadyExists",
+        "The item description already exists.");
+
+    public static BaseError ItemDescriptionNotFound(string id) => new(
+        "Items.ItemDescriptionNotFound",
+        $"There is no item description with the identifier {id}.");
+
     public static BaseError ItemAlreadyIsDisabled => new(
         "Items.ItemAlreadyIsDisabled",
         "The item is already disabled.");
+
+    public static BaseError ItemImageNotFound(string id) => new(
+        "Items.ItemImageNotFound",
+        $"There is no item image with the identifier {id}.");
+
+    public static BaseError ItemImageCannotUpdatedToDown => new(
+        "Items.ItemImageCannotUpdatedToDown",
+        "The item image cannot be updated to downwards.");
+
+    public static BaseError ItemImageCannotUpdatedToUp => new(
+        "Items.ItemImageCannotUpdatedToUp",
+        "The item image cannot be updated to upwards.");
 
     public static BaseError ItemIsDisabled => new(
         "Items.ItemIsDisabled",

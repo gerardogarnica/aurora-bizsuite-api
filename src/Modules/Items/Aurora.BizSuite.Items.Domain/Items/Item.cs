@@ -7,8 +7,12 @@ namespace Aurora.BizSuite.Items.Domain.Items;
 public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 {
     const int maxNumberOfUnits = 9;
+    const string imageResourceTypeName = "Image";
 
+    private readonly List<ItemDescription> _descriptions = [];
+    private readonly List<ItemResource> _resources = [];
     private readonly List<ItemUnit> _units = [];
+    private readonly List<RelatedItem> _relatedItems = [];
 
     public string Code { get; private set; }
     public string Name { get; private set; }
@@ -26,7 +30,10 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     public DateTime? UpdatedAt { get; init; }
     public Category Category { get; init; } = null!;
     public Brand Brand { get; init; } = null!;
+    public IReadOnlyCollection<ItemDescription> Descriptions => _descriptions.AsReadOnly();
+    public IReadOnlyCollection<ItemResource> Resources => _resources.AsReadOnly();
     public IReadOnlyCollection<ItemUnit> Units => _units.AsReadOnly();
+    public IReadOnlyCollection<RelatedItem> RelatedItems => _relatedItems.AsReadOnly();
 
     private Item() : base(new ItemId(Guid.NewGuid()))
     {
@@ -148,18 +155,18 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     }
 
     public Result<Item> UpdateUnit(
-        UnitOfMeasurement unit,
+        Guid itemUnitId,
         bool availableForReceipt,
         bool availableForDispatch,
         bool useDecimals)
     {
-        var itemUnit = _units.FirstOrDefault(x => x.UnitId == unit.Id);
+        var itemUnit = _units.FirstOrDefault(x => x.Id == itemUnitId);
 
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (itemUnit is null)
-            return Result.Fail<Item>(UnitErrors.NotFound(unit.Id.Value));
+            return Result.Fail<Item>(UnitErrors.NotFound(itemUnitId));
 
         itemUnit.Update(
             itemUnit.IsPrimary,
@@ -170,15 +177,15 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         return this;
     }
 
-    public Result<Item> RemoveUnit(UnitOfMeasurement unit)
+    public Result<Item> RemoveUnit(Guid itemUnitId)
     {
-        var itemUnit = _units.FirstOrDefault(x => x.UnitId == unit.Id);
+        var itemUnit = _units.FirstOrDefault(x => x.Id == itemUnitId);
 
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (itemUnit is null)
-            return Result.Fail<Item>(UnitErrors.NotFound(unit.Id.Value));
+            return Result.Fail<Item>(UnitErrors.NotFound(itemUnitId));
 
         if (itemUnit.IsPrimary)
             return Result.Fail<Item>(ItemErrors.ItemUnitIsUnableToRemove);
@@ -188,15 +195,15 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         return this;
     }
 
-    public Result<Item> SetPrimaryUnit(UnitOfMeasurement unit)
+    public Result<Item> SetPrimaryUnit(Guid itemUnitId)
     {
-        var itemUnit = _units.FirstOrDefault(x => x.UnitId == unit.Id);
+        var itemUnit = _units.FirstOrDefault(x => x.Id == itemUnitId);
 
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (itemUnit is null)
-            return Result.Fail<Item>(UnitErrors.NotFound(unit.Id.Value));
+            return Result.Fail<Item>(UnitErrors.NotFound(itemUnitId));
 
         if (itemUnit.IsPrimary)
             return Result.Fail<Item>(ItemErrors.ItemUnitIsPrimary);
@@ -223,5 +230,131 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             itemUnit.AvailableForReceipt,
             itemUnit.AvailableForDispatch,
             itemUnit.UseDecimals);
+    }
+
+    public Result<Item> AddDescription(string type, string description)
+    {
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (_descriptions.Any(x => x.Type == type))
+        {
+            return Result.Fail<Item>(ItemErrors.ItemDescriptionAlreadyExists);
+        }
+
+        var itemDescription = ItemDescription.Create(
+            Id,
+            type,
+            description);
+
+        _descriptions.Add(itemDescription);
+
+        return this;
+    }
+
+    public Result<Item> UpdateDescription(Guid descriptionId, string description)
+    {
+        var itemDescription = _descriptions.FirstOrDefault(x => x.Id == descriptionId);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (itemDescription is null)
+            return Result.Fail<Item>(ItemErrors.ItemDescriptionNotFound(descriptionId.ToString()));
+
+        itemDescription.Update(description);
+
+        return this;
+    }
+
+    public Result<Item> RemoveDescription(Guid descriptionId)
+    {
+        var itemDescription = _descriptions.FirstOrDefault(x => x.Id == descriptionId);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (itemDescription is null)
+            return Result.Fail<Item>(ItemErrors.ItemDescriptionNotFound(descriptionId.ToString()));
+
+        _descriptions.Remove(itemDescription);
+
+        return this;
+    }
+
+    public Result<Item> AddImage(string imageUri)
+    {
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        var orderNumber = _resources.FindAll(x => x.Type == imageResourceTypeName).Count + 1;
+
+        var itemResource = ItemResource.Create(
+            Id,
+            imageResourceTypeName,
+            string.Concat(imageResourceTypeName, "-", orderNumber),
+            imageUri,
+            orderNumber);
+
+        _resources.Add(itemResource);
+
+        return this;
+    }
+
+    public Result<Item> UpImageOrder(Guid imageId)
+    {
+        var itemResource = _resources.FirstOrDefault(x => x.Id == imageId);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (itemResource is null)
+            return Result.Fail<Item>(ItemErrors.ItemImageNotFound(imageId.ToString()));
+
+        if (itemResource.Order == 1)
+            return Result.Fail<Item>(ItemErrors.ItemImageCannotUpdatedToUp);
+
+        itemResource.UpOrder();
+
+        var anotherItemResource = _resources.FirstOrDefault(x => x.Order == itemResource.Order);
+        anotherItemResource?.DownOrder();
+
+        return this;
+    }
+
+    public Result<Item> DownImageOrder(Guid imageId)
+    {
+        var itemResource = _resources.FirstOrDefault(x => x.Id == imageId);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (itemResource is null)
+            return Result.Fail<Item>(ItemErrors.ItemImageNotFound(imageId.ToString()));
+
+        if (itemResource.Order == _resources.Count)
+            return Result.Fail<Item>(ItemErrors.ItemImageCannotUpdatedToDown);
+
+        itemResource.DownOrder();
+
+        var anotherItemResource = _resources.FirstOrDefault(x => x.Order == itemResource.Order);
+        anotherItemResource?.UpOrder();
+
+        return this;
+    }
+
+    public Result<Item> RemoveImage(Guid imageId)
+    {
+        var itemResource = _resources.FirstOrDefault(x => x.Id == imageId);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (itemResource is null)
+            return Result.Fail<Item>(ItemErrors.ItemImageNotFound(imageId.ToString()));
+
+        _resources.Remove(itemResource);
+
+        return this;
     }
 }

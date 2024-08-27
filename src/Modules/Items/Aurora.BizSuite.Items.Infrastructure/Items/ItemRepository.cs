@@ -1,4 +1,6 @@
-﻿namespace Aurora.BizSuite.Items.Infrastructure.Items;
+﻿using System.Linq.Expressions;
+
+namespace Aurora.BizSuite.Items.Infrastructure.Items;
 
 internal sealed class ItemRepository(
     ItemsDbContext dbContext)
@@ -6,21 +8,18 @@ internal sealed class ItemRepository(
 {
     public IUnitOfWork UnitOfWork => dbContext;
 
-    public override async Task<Item?> GetByIdAsync(ItemId id) => await dbContext
+    private async Task<Item?> GetItemAsync(Expression<Func<Item, bool>> predicate) => await dbContext
         .Items
         .Include(x => x.Category)
         .Include(x => x.Brand)
+        .Include(x => x.Descriptions)
         .Include(x => x.Units)
-        .Where(x => x.Id == id)
+        .Where(predicate)
         .FirstOrDefaultAsync();
 
-    public async Task<Item?> GetByCodeAsync(string code) => await dbContext
-        .Items
-        .Include(x => x.Category)
-        .Include(x => x.Brand)
-        .Include(x => x.Units)
-        .Where(x => x.Code == code)
-        .FirstOrDefaultAsync();
+    public override async Task<Item?> GetByIdAsync(ItemId id) => await GetItemAsync(x => x.Id == id);
+
+    public async Task<Item?> GetByCodeAsync(string code) => await GetItemAsync(x => x.Code == code);
 
     public async Task<PagedResult<Item>> GetPagedAsync(
         PagedViewRequest paged,
