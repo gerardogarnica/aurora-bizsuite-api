@@ -15,6 +15,7 @@ internal sealed class ItemRepository(
         .Include(x => x.Descriptions)
         .Include(x => x.Resources)
         .Include(x => x.Units)
+        .ThenInclude(u => u.Unit)
         .Include(x => x.RelatedItems)
         .AsSplitQuery()
         .Where(predicate)

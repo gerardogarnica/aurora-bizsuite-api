@@ -2,11 +2,11 @@
 
 namespace Aurora.BizSuite.Items.Presentation.Items;
 
-internal sealed class AddUnit : IBaseEndpoint
+internal sealed class AddItemUnit : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut(
+        app.MapPost(
             "items/units/add/{id}",
             async (Guid id, [FromBody] AddItemUnitRequest request, ISender sender) =>
             {
@@ -20,7 +20,7 @@ internal sealed class AddUnit : IBaseEndpoint
                 Result result = await sender.Send(command);
 
                 return result.Match(
-                    () => Results.Accepted(string.Empty),
+                    () => Results.Created(),
                     ApiResponses.Problem);
             })
             .WithName("AddItemUnit")

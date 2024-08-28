@@ -12,6 +12,7 @@ public sealed class ItemUnit
     public bool AvailableForDispatch { get; private set; }
     public bool UseDecimals { get; private set; }
     public bool IsEditable { get; private set; }
+    public UnitOfMeasurement Unit { get; init; } = null!;
 
     private ItemUnit()
     {
@@ -51,4 +52,6 @@ public sealed class ItemUnit
         AvailableForDispatch = availableForDispatch;
         UseDecimals = useDecimals;
     }
+
+    internal void SetIsEditable(bool isEditable) => IsEditable = isEditable;
 }

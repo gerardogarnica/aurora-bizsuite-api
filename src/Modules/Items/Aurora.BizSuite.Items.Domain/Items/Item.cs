@@ -107,6 +107,9 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 
         Status = ItemStatus.Active;
 
+        foreach (var itemUnit in _units)
+            itemUnit.SetIsEditable(false);
+
         AddDomainEvent(new ItemActivatedDomainEvent(Id.Value));
 
         return this;
@@ -168,6 +171,9 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         if (itemUnit is null)
             return Result.Fail<Item>(UnitErrors.NotFound(itemUnitId));
 
+        if (!itemUnit.IsEditable)
+            return Result.Fail<Item>(ItemErrors.ItemUnitIsNotEditable);
+
         itemUnit.Update(
             itemUnit.IsPrimary,
             availableForReceipt,
@@ -187,7 +193,10 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         if (itemUnit is null)
             return Result.Fail<Item>(UnitErrors.NotFound(itemUnitId));
 
-        if (itemUnit.IsPrimary)
+        if (!itemUnit.IsEditable)
+            return Result.Fail<Item>(ItemErrors.ItemUnitIsNotEditable);
+
+        if (Status is not ItemStatus.Draft && itemUnit.IsPrimary)
             return Result.Fail<Item>(ItemErrors.ItemUnitIsUnableToRemove);
 
         _units.Remove(itemUnit);
@@ -204,6 +213,9 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 
         if (itemUnit is null)
             return Result.Fail<Item>(UnitErrors.NotFound(itemUnitId));
+
+        if (!itemUnit.IsEditable)
+            return Result.Fail<Item>(ItemErrors.ItemUnitIsNotEditable);
 
         if (itemUnit.IsPrimary)
             return Result.Fail<Item>(ItemErrors.ItemUnitIsPrimary);

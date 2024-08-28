@@ -74,6 +74,10 @@ public static class ItemErrors
         "Items.ItemUnitAlreadyExists",
         "The item unit already exists.");
 
+    public static BaseError ItemUnitIsNotEditable => new(
+        "Items.ItemUnitIsNotEditable",
+        "The item unit is unable to change.");
+
     public static BaseError ItemUnitIsPrimary => new(
         "Items.ItemUnitIsPrimary",
         "The item unit is already the primary unit.");

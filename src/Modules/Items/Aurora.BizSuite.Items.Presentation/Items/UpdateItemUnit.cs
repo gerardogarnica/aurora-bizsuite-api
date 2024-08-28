@@ -2,7 +2,7 @@
 
 namespace Aurora.BizSuite.Items.Presentation.Items;
 
-internal sealed class UpdateUnit : IBaseEndpoint
+internal sealed class UpdateItemUnit : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -25,7 +25,7 @@ internal sealed class UpdateUnit : IBaseEndpoint
             })
             .WithName("UpdateItemUnit")
             .WithTags(EndpointTags.Item)
-            .Produces<Guid>(StatusCodes.Status202Accepted)
+            .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
