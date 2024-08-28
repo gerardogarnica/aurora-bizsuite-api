@@ -13,7 +13,10 @@ internal sealed class ItemRepository(
         .Include(x => x.Category)
         .Include(x => x.Brand)
         .Include(x => x.Descriptions)
+        .Include(x => x.Resources)
         .Include(x => x.Units)
+        .Include(x => x.RelatedItems)
+        .AsSplitQuery()
         .Where(predicate)
         .FirstOrDefaultAsync();
 
