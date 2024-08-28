@@ -19,12 +19,12 @@ public sealed record ItemModel
     public string? AlternativeCode { get; internal set; }
     public string? Notes { get; internal set; }
     public List<string> Tags { get; internal set; } = [];
+    public List<ItemUnitModel> Units { get; internal set; } = [];
 }
 
 internal static class ItemModelExtensions
 {
-    internal static ItemModel ToItemModel(
-        this Item item)
+    internal static ItemModel ToItemModel(this Item item)
     {
         return new ItemModel
         {
@@ -38,7 +38,8 @@ internal static class ItemModelExtensions
             Status = item.Status,
             AlternativeCode = item.AlternativeCode,
             Notes = item.Notes,
-            Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")]
+            Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")],
+            Units = item.Units.Select(x => x.ToItemUnitModel()).ToList()
         };
     }
 }
