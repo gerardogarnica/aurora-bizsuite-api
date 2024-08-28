@@ -1,18 +1,18 @@
-﻿using Aurora.BizSuite.Items.Application.Items.AddUnit;
+﻿using Aurora.BizSuite.Items.Application.Items.UpdateUnit;
 
 namespace Aurora.BizSuite.Items.Presentation.Items;
 
-internal sealed class AddUnit : IBaseEndpoint
+internal sealed class UpdateUnit : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut(
-            "items/units/add/{id}",
-            async (Guid id, [FromBody] AddItemUnitRequest request, ISender sender) =>
+            "items/units/update/{id}",
+            async (Guid id, [FromBody] UpdateItemUnitRequest request, ISender sender) =>
             {
-                var command = new AddItemUnitCommand(
+                var command = new UpdateItemUnitCommand(
                     id,
-                    request.UnitId,
+                    request.ItemUnitId,
                     request.AvailableForReceipt,
                     request.AvailableForDispatch,
                     request.UseDecimals);
@@ -23,15 +23,15 @@ internal sealed class AddUnit : IBaseEndpoint
                     () => Results.Accepted(string.Empty),
                     ApiResponses.Problem);
             })
-            .WithName("AddItemUnit")
+            .WithName("UpdateItemUnit")
             .WithTags(EndpointTags.Item)
             .Produces<Guid>(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
-    internal sealed record AddItemUnitRequest(
-        Guid UnitId,
+    internal sealed record UpdateItemUnitRequest(
+        Guid ItemUnitId,
         bool AvailableForReceipt,
         bool AvailableForDispatch,
         bool UseDecimals);
