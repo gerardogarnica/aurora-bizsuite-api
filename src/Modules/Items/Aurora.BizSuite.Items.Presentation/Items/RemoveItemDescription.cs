@@ -1,16 +1,16 @@
-﻿using Aurora.BizSuite.Items.Application.Items.RemoveUnit;
+﻿using Aurora.BizSuite.Items.Application.Items.RemoveDescription;
 
 namespace Aurora.BizSuite.Items.Presentation.Items;
 
-internal sealed class RemoveItemUnit : IBaseEndpoint
+internal sealed class RemoveItemDescription : IBaseEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapDelete(
-            "items/units/remove/{id}",
-            async (Guid id, [FromBody] RemoveItemUnitRequest request, ISender sender) =>
+            "items/descriptions/remove/{id}",
+            async (Guid id, [FromBody] RemoveItemDescriptionRequest request, ISender sender) =>
             {
-                var command = new RemoveItemUnitCommand(id, request.ItemUnitId);
+                var command = new RemoveItemDescriptionCommand(id, request.ItemDescriptionId);
 
                 Result result = await sender.Send(command);
 
@@ -18,12 +18,12 @@ internal sealed class RemoveItemUnit : IBaseEndpoint
                     () => Results.Accepted(string.Empty),
                     ApiResponses.Problem);
             })
-            .WithName("RemoveItemUnit")
+            .WithName("RemoveItemDescription")
             .WithTags(EndpointTags.Item)
             .Produces(StatusCodes.Status202Accepted)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
-    internal sealed record RemoveItemUnitRequest(Guid ItemUnitId);
+    internal sealed record RemoveItemDescriptionRequest(Guid ItemDescriptionId);
 }

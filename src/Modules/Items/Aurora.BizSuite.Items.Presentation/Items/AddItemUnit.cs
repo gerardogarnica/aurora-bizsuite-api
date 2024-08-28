@@ -25,7 +25,7 @@ internal sealed class AddItemUnit : IBaseEndpoint
             })
             .WithName("AddItemUnit")
             .WithTags(EndpointTags.Item)
-            .Produces<Guid>(StatusCodes.Status202Accepted)
+            .Produces(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }

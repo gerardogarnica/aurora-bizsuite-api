@@ -20,6 +20,7 @@ public sealed record ItemModel
     public string? Notes { get; internal set; }
     public List<string> Tags { get; internal set; } = [];
     public List<ItemUnitModel> Units { get; internal set; } = [];
+    public List<ItemDescriptionModel> Descriptions { get; internal set; } = [];
 }
 
 internal static class ItemModelExtensions
@@ -39,7 +40,8 @@ internal static class ItemModelExtensions
             AlternativeCode = item.AlternativeCode,
             Notes = item.Notes,
             Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")],
-            Units = item.Units.Select(x => x.ToItemUnitModel()).ToList()
+            Units = item.Units.Select(x => x.ToItemUnitModel()).ToList(),
+            Descriptions = item.Descriptions.Select(x => x.ToItemDescriptionModel()).ToList()
         };
     }
 }
