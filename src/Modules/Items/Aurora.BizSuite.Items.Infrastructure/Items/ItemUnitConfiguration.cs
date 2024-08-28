@@ -13,7 +13,8 @@ internal class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
         builder
             .Property(p => p.Id)
             .HasColumnName("ItemUnitId")
-            .IsRequired();
+            .IsRequired()
+            .ValueGeneratedNever();
 
         builder
             .Property(p => p.UnitId)

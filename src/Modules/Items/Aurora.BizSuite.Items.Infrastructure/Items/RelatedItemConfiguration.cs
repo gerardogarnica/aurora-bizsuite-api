@@ -13,7 +13,8 @@ internal class RelatedItemConfiguration : IEntityTypeConfiguration<RelatedItem>
         builder
             .Property(p => p.Id)
             .HasColumnName("RelatedItemId")
-            .IsRequired();
+            .IsRequired()
+            .ValueGeneratedNever();
 
         builder.Property(p => p.ItemId).IsRequired();
 

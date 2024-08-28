@@ -13,7 +13,8 @@ internal class ItemDescriptionConfiguration : IEntityTypeConfiguration<ItemDescr
         builder
             .Property(p => p.Id)
             .HasColumnName("ItemDescriptionId")
-            .IsRequired();
+            .IsRequired()
+            .ValueGeneratedNever();
 
         builder.Property(p => p.ItemId).IsRequired();
         builder.Property(p => p.Type).IsRequired().HasMaxLength(40);
