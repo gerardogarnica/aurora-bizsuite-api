@@ -1,21 +1,17 @@
 ﻿namespace Aurora.BizSuite.Items.Application.Items;
 
-public sealed record ItemDescriptionModel
-{
-    public Guid ItemDescriptionId { get; internal set; }
-    public string? Type { get; internal set; }
-    public string? Description { get; internal set; }
-}
+public sealed record ItemDescriptionModel(
+    Guid Id,
+    string? Type,
+    string? Description);
 
 internal static class ItemDescriptionModelExtensions
 {
     internal static ItemDescriptionModel ToItemDescriptionModel(this ItemDescription itemDescription)
     {
-        return new ItemDescriptionModel
-        {
-            ItemDescriptionId = itemDescription.Id,
-            Type = itemDescription.Type,
-            Description = itemDescription.Description
-        };
+        return new ItemDescriptionModel(
+            itemDescription.Id,
+            itemDescription.Type,
+            itemDescription.Description);
     }
 }

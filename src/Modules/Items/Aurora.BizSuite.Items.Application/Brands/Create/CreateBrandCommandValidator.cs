@@ -15,7 +15,7 @@ internal sealed class CreateBrandCommandValidator : AbstractValidator<CreateBran
             .MustAsync(BeUniqueName).WithBaseError(BrandErrors.NameIsNotUnique);
 
         RuleFor(x => x.LogoUri)
-            .MaximumLength(200).WithBaseError(BrandErrors.LogoUriIsTooLong);
+            .MaximumLength(1000).WithBaseError(BrandErrors.LogoUriIsTooLong);
 
         RuleFor(x => x.Notes)
             .MaximumLength(1000).WithBaseError(BrandErrors.NotesIsTooLong);

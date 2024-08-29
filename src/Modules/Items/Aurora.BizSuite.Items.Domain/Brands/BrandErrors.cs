@@ -8,7 +8,7 @@ public static class BrandErrors
 
     public static BaseError LogoUriIsTooLong => new(
         "Brands.LogoUriIsTooLong",
-        "The maximum brand logo URI length is 200 characters.");
+        "The maximum brand logo URI length is 1000 characters.");
 
     public static BaseError NameIsNotUnique => new(
         "Brands.NameIsNotUnique",

@@ -6,7 +6,7 @@ namespace Aurora.BizSuite.Items.Application.Items;
 
 public sealed record ItemModel
 {
-    public Guid ItemId { get; internal set; }
+    public Guid Id { get; internal set; }
     public string? Code { get; internal set; }
     public string? Name { get; internal set; }
     public string? Description { get; internal set; }
@@ -21,6 +21,8 @@ public sealed record ItemModel
     public List<string> Tags { get; internal set; } = [];
     public List<ItemUnitModel> Units { get; internal set; } = [];
     public List<ItemDescriptionModel> Descriptions { get; internal set; } = [];
+    public List<ItemImageModel> Images { get; internal set; } = [];
+    public List<ItemDocumentModel> Documents { get; internal set; } = [];
 }
 
 internal static class ItemModelExtensions
@@ -29,7 +31,7 @@ internal static class ItemModelExtensions
     {
         return new ItemModel
         {
-            ItemId = item.Id.Value,
+            Id = item.Id.Value,
             Code = item.Code,
             Name = item.Name,
             Description = item.Description,
@@ -41,7 +43,9 @@ internal static class ItemModelExtensions
             Notes = item.Notes,
             Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")],
             Units = item.Units.Select(x => x.ToItemUnitModel()).ToList(),
-            Descriptions = item.Descriptions.Select(x => x.ToItemDescriptionModel()).ToList()
+            Descriptions = item.Descriptions.Select(x => x.ToItemDescriptionModel()).ToList(),
+            Images = [.. item.Resources.Where(x => x.Type == ItemConstants.ImageResourceTypeName).Select(x => x.ToItemImageModel()).OrderBy(x => x.Order)],
+            Documents = [.. item.Resources.Where(x => x.Type == ItemConstants.DocumentResourceTypeName).Select(x => x.ToItemDocumentModel()).OrderBy(x => x.Name)]
         };
     }
 }
