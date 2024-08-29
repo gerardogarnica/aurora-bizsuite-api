@@ -7,7 +7,6 @@ namespace Aurora.BizSuite.Items.Domain.Items;
 public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 {
     const int maxNumberOfUnits = 9;
-    const string imageResourceTypeName = "Image";
 
     private readonly List<ItemDescription> _descriptions = [];
     private readonly List<ItemResource> _resources = [];
@@ -250,9 +249,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (_descriptions.Any(x => x.Type == type))
-        {
             return Result.Fail<Item>(ItemErrors.ItemDescriptionAlreadyExists);
-        }
 
         var itemDescription = ItemDescription.Create(
             Id,
@@ -294,17 +291,37 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         return this;
     }
 
+    public Result<Item> AddDocument(string name, string documentUri)
+    {
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (_resources.Any(x => x.Type == ItemConstants.DocumentResourceTypeName && x.Name == name))
+            return Result.Fail<Item>(ItemErrors.ItemResourceAlreadyExists);
+
+        var itemResource = ItemResource.Create(
+            Id,
+            ItemConstants.DocumentResourceTypeName,
+            name,
+            documentUri,
+            1);
+
+        _resources.Add(itemResource);
+
+        return this;
+    }
+
     public Result<Item> AddImage(string imageUri)
     {
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
-        var orderNumber = _resources.FindAll(x => x.Type == imageResourceTypeName).Count + 1;
+        var orderNumber = _resources.FindAll(x => x.Type == ItemConstants.ImageResourceTypeName).Count + 1;
 
         var itemResource = ItemResource.Create(
             Id,
-            imageResourceTypeName,
-            string.Concat(imageResourceTypeName, "-", orderNumber),
+            ItemConstants.ImageResourceTypeName,
+            string.Concat(ItemConstants.ImageResourceTypeName, "-", orderNumber),
             imageUri,
             orderNumber);
 
@@ -321,7 +338,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (itemResource is null)
-            return Result.Fail<Item>(ItemErrors.ItemImageNotFound(imageId.ToString()));
+            return Result.Fail<Item>(ItemErrors.ItemResourceNotFound(imageId.ToString()));
 
         if (itemResource.Order == 1)
             return Result.Fail<Item>(ItemErrors.ItemImageCannotUpdatedToUp);
@@ -342,7 +359,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (itemResource is null)
-            return Result.Fail<Item>(ItemErrors.ItemImageNotFound(imageId.ToString()));
+            return Result.Fail<Item>(ItemErrors.ItemResourceNotFound(imageId.ToString()));
 
         if (itemResource.Order == _resources.Count)
             return Result.Fail<Item>(ItemErrors.ItemImageCannotUpdatedToDown);
@@ -355,15 +372,19 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         return this;
     }
 
-    public Result<Item> RemoveImage(Guid imageId)
+    public Result<Item> RemoveResource(Guid resourceId, string type)
     {
-        var itemResource = _resources.FirstOrDefault(x => x.Id == imageId);
+        var itemResource = _resources.FirstOrDefault(x => x.Id == resourceId && x.Type == type);
 
         if (Status is ItemStatus.Disabled)
             return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
 
         if (itemResource is null)
-            return Result.Fail<Item>(ItemErrors.ItemImageNotFound(imageId.ToString()));
+            return Result.Fail<Item>(ItemErrors.ItemResourceNotFound(resourceId.ToString()));
+
+        _resources
+            .FindAll(x => x.Type == type && x.Order > itemResource.Order)
+            .ForEach(x => x.UpOrder());
 
         _resources.Remove(itemResource);
 

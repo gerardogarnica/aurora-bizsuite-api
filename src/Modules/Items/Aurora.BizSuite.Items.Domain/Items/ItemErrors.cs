@@ -42,21 +42,21 @@ public static class ItemErrors
         "Items.ItemAlreadyIsActive",
         "The item is already active.");
 
-    public static BaseError ItemDescriptionAlreadyExists => new(
-        "Items.ItemDescriptionAlreadyExists",
-        "The item description already exists.");
-
-    public static BaseError ItemDescriptionNotFound(string id) => new(
-        "Items.ItemDescriptionNotFound",
-        $"There is no item description with the identifier {id}.");
-
     public static BaseError ItemAlreadyIsDisabled => new(
         "Items.ItemAlreadyIsDisabled",
         "The item is already disabled.");
 
-    public static BaseError ItemImageNotFound(string id) => new(
-        "Items.ItemImageNotFound",
-        $"There is no item image with the identifier {id}.");
+    public static BaseError ItemDescriptionAlreadyExists => new(
+        "Items.ItemDescriptionAlreadyExists",
+        "The item description already exists.");
+
+    public static BaseError ItemDescriptionIsTooLong => new(
+        "Items.ItemDescriptionIsTooLong",
+        "The maximum item description length is 4000 characters.");
+
+    public static BaseError ItemDescriptionNotFound(string id) => new(
+        "Items.ItemDescriptionNotFound",
+        $"There is no item description with the identifier {id}.");
 
     public static BaseError ItemImageCannotUpdatedToDown => new(
         "Items.ItemImageCannotUpdatedToDown",
@@ -69,6 +69,14 @@ public static class ItemErrors
     public static BaseError ItemIsDisabled => new(
         "Items.ItemIsDisabled",
         "The item is disabled.");
+
+    public static BaseError ItemResourceAlreadyExists => new(
+        "Items.ItemResourceAlreadyExists",
+        "The item resource already exists.");
+
+    public static BaseError ItemResourceNotFound(string id) => new(
+        "Items.ItemResourceNotFound",
+        $"There is no item resource with the identifier {id}.");
 
     public static BaseError ItemUnitAlreadyExists => new(
         "Items.ItemUnitAlreadyExists",
@@ -121,4 +129,20 @@ public static class ItemErrors
     public static BaseError TagsLimitExceeded => new(
         "Items.TagsLimitExceeded",
         "The maximum item tags is 100 tags.");
+
+    public static BaseError TypeIsTooLong => new(
+        "Items.TypeIsTooLong",
+        "The maximum item name length is 40 characters.");
+
+    public static BaseError UriIsInvalid => new(
+        "Items.UriIsInvalid",
+        "The URL is not valid.");
+
+    public static BaseError UriIsRequired => new(
+        "Items.UriIsRequired",
+        "The URL is required.");
+
+    public static BaseError UriIsTooLong => new(
+        "Items.UriIsTooLong",
+        "The maximum URL length is 1000 characters.");
 }
