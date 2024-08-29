@@ -14,16 +14,13 @@ public sealed record ItemUnitModel(
 
 internal static class ItemUnitModelExtensions
 {
-    internal static ItemUnitModel ToItemUnitModel(this ItemUnit itemUnit)
-    {
-        return new ItemUnitModel(
-            itemUnit.Id,
-            itemUnit.UnitId.Value,
-            itemUnit.Unit.ToUnitModel(),
-            itemUnit.IsPrimary,
-            itemUnit.AvailableForReceipt,
-            itemUnit.AvailableForDispatch,
-            itemUnit.UseDecimals,
-            itemUnit.IsEditable);
-    }
+    internal static ItemUnitModel ToItemUnitModel(this ItemUnit itemUnit) => new(
+        itemUnit.Id,
+        itemUnit.UnitId.Value,
+        itemUnit.Unit.ToUnitModel(),
+        itemUnit.IsPrimary,
+        itemUnit.AvailableForReceipt,
+        itemUnit.AvailableForDispatch,
+        itemUnit.UseDecimals,
+        itemUnit.IsEditable);
 }

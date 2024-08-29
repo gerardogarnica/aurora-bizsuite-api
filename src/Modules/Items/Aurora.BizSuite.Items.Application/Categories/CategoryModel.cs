@@ -13,18 +13,14 @@ public sealed record CategoryModel(
 
 internal static class CategoryModelExtensions
 {
-    internal static CategoryModel ToCategoryModel(
-        this Category category)
-    {
-        return new CategoryModel(
-            category.Id.Value,
-            category.Name,
-            category.Code,
-            category.ParentId?.Value,
-            category.Level,
-            category.Notes,
-            category.IsLocked,
-            category.IsLeaf,
-            category.Childs.Select(x => x.ToCategoryModel()).ToList());
-    }
+    internal static CategoryModel ToCategoryModel(this Category category) => new(
+        category.Id.Value,
+        category.Name,
+        category.Code,
+        category.ParentId?.Value,
+        category.Level,
+        category.Notes,
+        category.IsLocked,
+        category.IsLeaf,
+        category.Childs.Select(x => x.ToCategoryModel()).ToList());
 }

@@ -8,13 +8,9 @@ public sealed record UnitOfMeasurementModel(
 
 internal static class UnitModelExtensions
 {
-    internal static UnitOfMeasurementModel ToUnitModel(
-        this UnitOfMeasurement unit)
-    {
-        return new UnitOfMeasurementModel(
-            unit.Id.Value,
-            unit.Name,
-            unit.Symbol,
-            unit.Notes);
-    }
+    internal static UnitOfMeasurementModel ToUnitModel(this UnitOfMeasurement unit) => new(
+        unit.Id.Value,
+        unit.Name,
+        unit.Symbol,
+        unit.Notes);
 }

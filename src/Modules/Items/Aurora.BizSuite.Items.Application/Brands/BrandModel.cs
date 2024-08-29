@@ -8,12 +8,9 @@ public sealed record BrandModel(
 
 internal static class BrandModelExtensions
 {
-    internal static BrandModel ToBrandModel(this Brand brand)
-    {
-        return new BrandModel(
-            brand.Id.Value,
-            brand.Name,
-            brand.LogoUri,
-            brand.Notes);
-    }
+    internal static BrandModel ToBrandModel(this Brand brand) => new(
+        brand.Id.Value,
+        brand.Name,
+        brand.LogoUri,
+        brand.Notes);
 }

@@ -7,11 +7,8 @@ public sealed record ItemDocumentModel(
 
 internal static class ItemDocumentModelExtensions
 {
-    internal static ItemDocumentModel ToItemDocumentModel(this ItemResource itemResource)
-    {
-        return new ItemDocumentModel(
-            itemResource.Id,
-            itemResource.Name,
-            itemResource.Uri);
-    }
+    internal static ItemDocumentModel ToItemDocumentModel(this ItemResource itemResource) => new(
+        itemResource.Id,
+        itemResource.Name,
+        itemResource.Uri);
 }

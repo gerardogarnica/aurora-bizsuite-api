@@ -7,11 +7,8 @@ public sealed record ItemImageModel(
 
 internal static class ItemImageModelExtensions
 {
-    internal static ItemImageModel ToItemImageModel(this ItemResource itemResource)
-    {
-        return new ItemImageModel(
-            itemResource.Id,
-            itemResource.Uri,
-            itemResource.Order);
-    }
+    internal static ItemImageModel ToItemImageModel(this ItemResource itemResource) => new(
+        itemResource.Id,
+        itemResource.Uri,
+        itemResource.Order);
 }

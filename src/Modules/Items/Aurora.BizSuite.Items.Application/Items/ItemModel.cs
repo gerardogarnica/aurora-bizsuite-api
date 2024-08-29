@@ -23,29 +23,28 @@ public sealed record ItemModel
     public List<ItemDescriptionModel> Descriptions { get; internal set; } = [];
     public List<ItemImageModel> Images { get; internal set; } = [];
     public List<ItemDocumentModel> Documents { get; internal set; } = [];
+    public List<Guid> RelatedItems { get; internal set; } = [];
 }
 
 internal static class ItemModelExtensions
 {
-    internal static ItemModel ToItemModel(this Item item)
+    internal static ItemModel ToItemModel(this Item item) => new()
     {
-        return new ItemModel
-        {
-            Id = item.Id.Value,
-            Code = item.Code,
-            Name = item.Name,
-            Description = item.Description,
-            Category = item.Category.ToCategoryModel(),
-            Brand = item.Brand.ToBrandModel(),
-            ItemType = item.ItemType,
-            Status = item.Status,
-            AlternativeCode = item.AlternativeCode,
-            Notes = item.Notes,
-            Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")],
-            Units = item.Units.Select(x => x.ToItemUnitModel()).ToList(),
-            Descriptions = item.Descriptions.Select(x => x.ToItemDescriptionModel()).ToList(),
-            Images = [.. item.Resources.Where(x => x.Type == ItemConstants.ImageResourceTypeName).Select(x => x.ToItemImageModel()).OrderBy(x => x.Order)],
-            Documents = [.. item.Resources.Where(x => x.Type == ItemConstants.DocumentResourceTypeName).Select(x => x.ToItemDocumentModel()).OrderBy(x => x.Name)]
-        };
-    }
+        Id = item.Id.Value,
+        Code = item.Code,
+        Name = item.Name,
+        Description = item.Description,
+        Category = item.Category.ToCategoryModel(),
+        Brand = item.Brand.ToBrandModel(),
+        ItemType = item.ItemType,
+        Status = item.Status,
+        AlternativeCode = item.AlternativeCode,
+        Notes = item.Notes,
+        Tags = item.Tags == null ? [] : [.. item.Tags.Split(";")],
+        Units = item.Units.Select(x => x.ToItemUnitModel()).ToList(),
+        Descriptions = item.Descriptions.Select(x => x.ToItemDescriptionModel()).ToList(),
+        Images = [.. item.Resources.Where(x => x.Type == ItemConstants.ImageResourceTypeName).Select(x => x.ToItemImageModel()).OrderBy(x => x.Order)],
+        Documents = [.. item.Resources.Where(x => x.Type == ItemConstants.DocumentResourceTypeName).Select(x => x.ToItemDocumentModel()).OrderBy(x => x.Name)],
+        RelatedItems = item.RelatedItems.Select(x => x.RelatedItemId.Value).ToList()
+    };
 }

@@ -7,11 +7,8 @@ public sealed record ItemDescriptionModel(
 
 internal static class ItemDescriptionModelExtensions
 {
-    internal static ItemDescriptionModel ToItemDescriptionModel(this ItemDescription itemDescription)
-    {
-        return new ItemDescriptionModel(
-            itemDescription.Id,
-            itemDescription.Type,
-            itemDescription.Description);
-    }
+    internal static ItemDescriptionModel ToItemDescriptionModel(this ItemDescription itemDescription) => new(
+        itemDescription.Id,
+        itemDescription.Type,
+        itemDescription.Description);
 }
