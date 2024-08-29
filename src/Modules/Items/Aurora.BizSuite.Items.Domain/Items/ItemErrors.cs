@@ -98,6 +98,10 @@ public static class ItemErrors
         "Items.ItemWithoutUnits",
         "The item has no units of measurement.");
 
+    public static BaseError MaxNumberOfRelatedReached => new(
+        "Items.MaxNumberOfRelatedReached",
+        "The maximum number of related items has been reached.");
+
     public static BaseError MaxNumberOfUnitsReached => new(
         "Items.MaxNumberOfUnitsReached",
         "The maximum number of units has been reached.");
@@ -121,6 +125,22 @@ public static class ItemErrors
     public static BaseError NotesIsTooLong => new(
         "Items.NotesIsTooLong",
         "The maximum item notes length is 1000 characters.");
+
+    public static BaseError RelatedItemAlreadyExists => new(
+        "Items.RelatedItemAlreadyExists",
+        "The item already is related.");
+
+    public static BaseError RelatedItemIsDisabled => new(
+        "Items.RelatedItemIsDisabled",
+        "The related item is disabled.");
+
+    public static BaseError RelatedItemIsSameItem => new(
+        "Items.RelatedItemIsSameItem",
+        "The related item cannot be the same item.");
+
+    public static BaseError RelatedItemNotFound(Guid id) => new(
+        "Items.RelatedItemNotFound",
+        $"There is no related item with the identifier {id}.");
 
     public static BaseError TagsIsTooLong => new(
         "Items.TagsIsTooLong",

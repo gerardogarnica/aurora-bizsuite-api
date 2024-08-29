@@ -7,6 +7,7 @@ namespace Aurora.BizSuite.Items.Domain.Items;
 public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 {
     const int maxNumberOfUnits = 9;
+    const int maxNumberOfRelatedItems = 9;
 
     private readonly List<ItemDescription> _descriptions = [];
     private readonly List<ItemResource> _resources = [];
@@ -387,6 +388,45 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             .ForEach(x => x.UpOrder());
 
         _resources.Remove(itemResource);
+
+        return this;
+    }
+
+    public Result<Item> AddRelated(Item relatedItem)
+    {
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (Id == relatedItem.Id)
+            return Result.Fail<Item>(ItemErrors.RelatedItemIsSameItem);
+
+        if (_relatedItems.Any(x => x.RelatedItemId == relatedItem.Id))
+            return Result.Fail<Item>(ItemErrors.RelatedItemAlreadyExists);
+
+        if (relatedItem.Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.RelatedItemIsDisabled);
+
+        if (_relatedItems.Count >= maxNumberOfRelatedItems)
+            return Result.Fail<Item>(ItemErrors.MaxNumberOfRelatedReached);
+
+        var related = RelatedItem.Create(Id, relatedItem.Id);
+
+        _relatedItems.Add(related);
+
+        return this;
+    }
+
+    public Result<Item> RemoveRelated(Guid relatedItemId)
+    {
+        var relatedItem = _relatedItems.FirstOrDefault(x => x.Id == relatedItemId);
+
+        if (Status is ItemStatus.Disabled)
+            return Result.Fail<Item>(ItemErrors.ItemIsDisabled);
+
+        if (relatedItem is null)
+            return Result.Fail<Item>(ItemErrors.RelatedItemNotFound(relatedItemId));
+
+        _relatedItems.Remove(relatedItem);
 
         return this;
     }
