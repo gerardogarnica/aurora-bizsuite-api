@@ -1,4 +1,5 @@
 using Aurora.BizSuite.Api.Extensions;
+using Aurora.BizSuite.Companies.Infrastructure;
 using Aurora.BizSuite.Items.Infrastructure;
 using Aurora.Framework.Presentation.Endpoints;
 using Aurora.Framework.Presentation.Middlewares;
@@ -22,16 +23,19 @@ builder.Services.AddProblemDetails();
 // builder.Host.ConfigureSerilogToElasticsearch();
 
 builder.Services.ConfigureOptions<SwaggerGenOptionsSetup>();
+builder.Configuration.AddModuleConfiguration(["items"]);
 
 // Add module services
-builder.Services.AddItemsModuleServices(builder.Configuration);
+builder.Services
+    .AddCompaniesModuleServices(builder.Configuration)
+    .AddItemsModuleServices(builder.Configuration);
 
 var app = builder.Build();
 
 RouteGroupBuilder routeGroup = app
     .MapGroup("aurora/bizsuite/")
     .WithOpenApi();
-    //.RequireAuthorization();
+//.RequireAuthorization();
 
 app.MapEndpoints(routeGroup);
 
