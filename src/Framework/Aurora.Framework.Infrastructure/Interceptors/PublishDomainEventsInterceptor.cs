@@ -26,10 +26,10 @@ public sealed class PublishDomainEventsInterceptor(
             .ChangeTracker
             .Entries<IAggregateRoot>()
             .Select(x => x.Entity)
-            .Where(x => x.DomainEvents.Count != 0)
+            .Where(x => x.DomainEvents.Count > 0)
             .SelectMany(x =>
             {
-                var domainEvents = x.DomainEvents;
+                var domainEvents = x.DomainEvents.ToList();
                 x.ClearDomainEvents();
 
                 return domainEvents;
@@ -40,7 +40,7 @@ public sealed class PublishDomainEventsInterceptor(
 
         IPublisher publisher = serviceScope.ServiceProvider.GetRequiredService<IPublisher>();
 
-        foreach (var domainEvent in domainEvents)
+        foreach (IDomainEvent domainEvent in domainEvents)
         {
             await publisher.Publish(domainEvent);
         }
