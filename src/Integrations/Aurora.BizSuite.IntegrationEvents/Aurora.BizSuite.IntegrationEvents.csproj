@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Aurora.Framework.Application\Aurora.Framework.Application.csproj" />
+  </ItemGroup>
+
+</Project>
