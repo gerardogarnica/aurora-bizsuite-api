@@ -7,8 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Aurora.Framework.Presentation.OpenApi;
 
-public sealed class SwaggerGenOptionsSetup
-    : IConfigureNamedOptions<SwaggerGenOptions>
+public sealed class SwaggerGenOptionsSetup : IConfigureNamedOptions<SwaggerGenOptions>
 {
     const string apiName = "Aurora Platform";
     const string apiDescription = "Aurora Platform";
