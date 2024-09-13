@@ -4,6 +4,7 @@ using Aurora.Framework.Infrastructure.Time;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Quartz;
 
 namespace Aurora.Framework.Infrastructure;
 
@@ -13,12 +14,27 @@ public static class DependencyInjections
         this IServiceCollection services,
         Action<IRegistrationConfigurator>[] moduleConfigureConsumers)
     {
-        // EF Core interceptors
-        services.TryAddSingleton<PublishDomainEventsInterceptor>();
+        services.AddEntityFrameworkCoreInterceptors();
+        services.AddMassTransitConfiguration(moduleConfigureConsumers);
+        services.AddQuartzConfiguration();
+        services.AddDateTimeServices();
+
+        return services;
+    }
+
+    private static IServiceCollection AddEntityFrameworkCoreInterceptors(this IServiceCollection services)
+    {
+        services.TryAddSingleton<InsertOutboxMessagesInterceptor>();
         services.TryAddSingleton<AuditableEntitiesInterceptor>();
         services.TryAddSingleton<SoftDeletableEntitiesInterceptor>();
 
-        // MassTransit event bus
+        return services;
+    }
+
+    private static IServiceCollection AddMassTransitConfiguration(
+        this IServiceCollection services,
+        Action<IRegistrationConfigurator>[] moduleConfigureConsumers)
+    {
         services.TryAddSingleton<IEventBus, EventBus.EventBus>();
 
         services.AddMassTransit(configure =>
@@ -36,7 +52,19 @@ public static class DependencyInjections
             });
         });
 
-        // DateTime services
+        return services;
+    }
+
+    private static IServiceCollection AddQuartzConfiguration(this IServiceCollection services)
+    {
+        services.AddQuartz();
+        services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+
+        return services;
+    }
+
+    private static IServiceCollection AddDateTimeServices(this IServiceCollection services)
+    {
         services.TryAddSingleton<IDateTimeService, DateTimeService>();
 
         return services;
