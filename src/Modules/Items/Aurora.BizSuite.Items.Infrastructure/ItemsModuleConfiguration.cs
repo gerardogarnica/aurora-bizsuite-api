@@ -4,17 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aurora.BizSuite.Items.Infrastructure;
 
-public static class DependencyInjection
+public static class ItemsModuleConfiguration
 {
-    public static IServiceCollection AddItemsModuleServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddItemsModuleServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Common services
-        services.AddEndpoints(Presentation.AssemblyReference.Assembly);
-        services.AddCommonApplicationServices([Application.AssemblyReference.Assembly]);
-        services.AddCommonInfrastructureServices();
-
         // Database connection
         var connectionString = configuration.GetConnectionString("ItemsDataConnection");
 
@@ -24,7 +17,7 @@ public static class DependencyInjection
                 .UseSqlServer(
                     connectionString,
                     x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, ItemsDbContext.DEFAULT_SCHEMA))
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>())
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>())
                 .AddInterceptors(sp.GetRequiredService<AuditableEntitiesInterceptor>())
                 .AddInterceptors(sp.GetRequiredService<SoftDeletableEntitiesInterceptor>());
         });
