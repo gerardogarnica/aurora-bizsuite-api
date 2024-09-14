@@ -1,12 +1,6 @@
-﻿namespace Aurora.Framework.Application;
+﻿using MediatR;
 
-public interface IDomainEventHandler<in TDomainEvent> : IDomainEventHandler
-    where TDomainEvent : IDomainEvent
-{
-    Task Handle(TDomainEvent domainEvent, CancellationToken cancellationToken = default);
-}
+namespace Aurora.Framework.Application;
 
-public interface IDomainEventHandler
-{
-    Task Handle(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
-}
+public interface IDomainEventHandler<in TDomainEvent> : INotificationHandler<TDomainEvent>
+    where TDomainEvent : IDomainEvent;
