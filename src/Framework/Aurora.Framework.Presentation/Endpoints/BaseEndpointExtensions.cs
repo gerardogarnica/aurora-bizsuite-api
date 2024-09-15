@@ -10,7 +10,7 @@ public static class BaseEndpointExtensions
 {
     public static IServiceCollection AddEndpoints(
         this IServiceCollection services,
-        params Assembly[] assemblies)
+        Assembly[] assemblies)
     {
         ServiceDescriptor[] serviceDescriptor = assemblies
             .SelectMany(a => a.GetTypes())
