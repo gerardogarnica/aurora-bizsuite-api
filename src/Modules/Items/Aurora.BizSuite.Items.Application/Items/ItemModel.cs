@@ -7,9 +7,9 @@ namespace Aurora.BizSuite.Items.Application.Items;
 public sealed record ItemModel
 {
     public Guid Id { get; internal set; }
-    public string? Code { get; internal set; }
-    public string? Name { get; internal set; }
-    public string? Description { get; internal set; }
+    public required string Code { get; init; }
+    public required string Name { get; init; }
+    public required string Description { get; init; }
     public CategoryModel? Category { get; internal set; }
     public BrandModel? Brand { get; internal set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

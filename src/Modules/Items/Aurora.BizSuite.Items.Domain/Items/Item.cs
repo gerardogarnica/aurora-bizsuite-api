@@ -110,7 +110,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
         foreach (var itemUnit in _units)
             itemUnit.SetIsEditable(false);
 
-        AddDomainEvent(new ItemEnabledDomainEvent(Id.Value));
+        AddDomainEvent(new ItemEnabledDomainEvent(Id.Value, ItemType));
 
         return this;
     }
