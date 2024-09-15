@@ -23,7 +23,7 @@ internal class BrandConfiguration : IEntityTypeConfiguration<Brand>
 
         builder
             .Property(p => p.LogoUri)
-            .HasMaxLength(200);
+            .HasMaxLength(1000);
 
         builder
             .Property(p => p.Notes)

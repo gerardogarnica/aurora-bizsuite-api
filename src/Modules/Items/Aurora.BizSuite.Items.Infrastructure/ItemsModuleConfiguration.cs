@@ -31,6 +31,10 @@ public static class ItemsModuleConfiguration
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IUnitRepository, UnitRepository>();
 
+        // Outbox pattern implementation
+        services.Configure<OutboxOptions>(configuration.GetSection("Items:Outbox"));
+        services.ConfigureOptions<ConfigureItemsOutboxJob>();
+
         return services;
     }
 }
