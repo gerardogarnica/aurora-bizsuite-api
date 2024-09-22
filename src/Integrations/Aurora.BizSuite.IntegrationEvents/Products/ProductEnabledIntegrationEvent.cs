@@ -16,14 +16,16 @@ public sealed class ProductEnabledIntegrationEvent(
     public string Name { get; init; } = name;
     public string Description { get; init; } = description;
     public string? AlternativeCode { get; init; } = alternativeCode;
-    public IReadOnlyList<ProductUnitModel> ProductUnits { get; init; } = productUnits;
+    public List<ProductUnitModel> ProductUnits { get; init; } = productUnits;
 }
 
-public sealed record ProductUnitModel(
-    Guid ProductUnitId,
-    Guid UnitId,
-    bool IsPrimary,
-    bool AvailableForReceipt,
-    bool AvailableForDispatch,
-    bool UseDecimals,
-    bool IsEditable);
+public sealed class ProductUnitModel
+{
+    public Guid ProductUnitId { get; init; }
+    public Guid UnitId { get; init; }
+    public bool IsPrimary { get; init; }
+    public bool AvailableForReceipt { get; init; }
+    public bool AvailableForDispatch { get; init; }
+    public bool UseDecimals { get; init; }
+    public bool IsEditable { get; init; }
+}

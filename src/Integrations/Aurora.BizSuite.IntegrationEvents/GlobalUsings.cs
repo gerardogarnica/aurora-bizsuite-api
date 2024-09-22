@@ -1,1 +1,1 @@
-﻿global using Aurora.Framework.Application;
+﻿global using Aurora.Framework;
