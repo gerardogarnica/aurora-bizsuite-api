@@ -26,6 +26,7 @@ public sealed class ItemsDbContext(
         modelBuilder.HasDefaultSchema(DEFAULT_SCHEMA);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ItemsDbContext).Assembly);
+        modelBuilder.ApplyInboxMessageConfiguration();
         modelBuilder.ApplyOutboxMessageConfiguration();
     }
 }

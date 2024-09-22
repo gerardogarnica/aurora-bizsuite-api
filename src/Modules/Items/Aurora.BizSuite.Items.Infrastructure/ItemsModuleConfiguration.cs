@@ -31,9 +31,15 @@ public static class ItemsModuleConfiguration
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IUnitRepository, UnitRepository>();
 
+        // Inbox pattern implementation
+        services.Configure<InboxOptions>(configuration.GetSection("Items:Inbox"));
+        services.ConfigureOptions<ConfigureItemsInboxJob>();
+
         // Outbox pattern implementation
         services.Configure<OutboxOptions>(configuration.GetSection("Items:Outbox"));
         services.ConfigureOptions<ConfigureItemsOutboxJob>();
+
+        // Integration event handler implementations
 
         return services;
     }

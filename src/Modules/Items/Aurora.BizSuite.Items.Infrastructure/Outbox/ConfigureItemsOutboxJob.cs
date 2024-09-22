@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Quartz;
-
-namespace Aurora.BizSuite.Items.Infrastructure.Outbox;
+﻿namespace Aurora.BizSuite.Items.Infrastructure.Outbox;
 
 internal sealed class ConfigureItemsOutboxJob(
     IOptions<OutboxOptions> options) : IConfigureOptions<QuartzOptions>
