@@ -1,4 +1,4 @@
-﻿namespace Aurora.Framework.Application;
+﻿namespace Aurora.Framework;
 
 public abstract class IntegrationEvent(Guid id, DateTime occurredOnUtc)
     : IIntegrationEvent

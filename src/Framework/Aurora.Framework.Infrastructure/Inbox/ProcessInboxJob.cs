@@ -1,13 +1,10 @@
 ﻿using Aurora.Framework.Application;
-using Aurora.Framework.Application.EventBus;
 using Aurora.Framework.Infrastructure.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Quartz;
-using System.Collections.Concurrent;
-using System.Reflection;
 
 namespace Aurora.Framework.Infrastructure.Inbox;
 
@@ -15,12 +12,9 @@ namespace Aurora.Framework.Infrastructure.Inbox;
 public abstract class ProcessInboxJob(
     DbContext dbContext,
     string moduleName,
-    Assembly presentationAssembly,
     IServiceScopeFactory serviceScopeFactory,
     ILogger<ProcessInboxJob> logger) : IJob
 {
-    private static readonly ConcurrentDictionary<string, Type[]> HandlersDictionary = new();
-
     public async Task Execute(IJobExecutionContext context)
     {
         logger.LogInformation("Starting to process {moduleName} inbox messages.", moduleName);
@@ -40,10 +34,16 @@ public abstract class ProcessInboxJob(
 
                 using IServiceScope scope = serviceScopeFactory.CreateScope();
 
-                IEnumerable<IIntegrationEventHandler> handlers = GetHandlers(integrationEvent.GetType(), scope.ServiceProvider);
-                foreach (IIntegrationEventHandler handler in handlers)
+                var handlers = scope.ServiceProvider.GetServices(
+                    typeof(IIntegrationEventHandler<>).MakeGenericType(integrationEvent.GetType()));
+
+                foreach (var handler in handlers)
                 {
-                    await handler.Handle(integrationEvent, context.CancellationToken);
+                    var handleMethod = handler!.GetType().GetMethod("Handle");
+                    if (handleMethod != null)
+                    {
+                        await (Task)handleMethod.Invoke(handler, [integrationEvent, context.CancellationToken])!;
+                    }
                 }
             }
             catch (Exception processException)
@@ -68,29 +68,4 @@ public abstract class ProcessInboxJob(
     public abstract Task UpdateInboxMessageAsync(InboxMessageResponse messageResponse, Exception? exception);
 
     public sealed record InboxMessageResponse(Guid InboxId, string Content);
-
-    private IEnumerable<IIntegrationEventHandler> GetHandlers(Type integrationEventType, IServiceProvider serviceProvider)
-    {
-        Type[] integrationEventHandlerTypes = HandlersDictionary.GetOrAdd(
-            $"{presentationAssembly.GetName().Name}-{integrationEventType.Name}",
-            _ =>
-            {
-                Type[] integrationEventHandlers = presentationAssembly
-                    .GetTypes()
-                    .Where(x => x.IsAssignableTo(typeof(IIntegrationEventHandler<>).MakeGenericType(integrationEventType)))
-                    .ToArray();
-
-                return integrationEventHandlers;
-            });
-
-        List<IIntegrationEventHandler> handlers = [];
-        foreach (Type integrationEventHandlerType in integrationEventHandlerTypes)
-        {
-            object integrationEventHandler = serviceProvider.GetRequiredService(integrationEventHandlerType);
-
-            handlers.Add((integrationEventHandler as IIntegrationEventHandler)!);
-        }
-
-        return handlers;
-    }
 }

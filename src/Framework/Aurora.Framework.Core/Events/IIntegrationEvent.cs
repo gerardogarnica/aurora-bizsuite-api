@@ -1,4 +1,4 @@
-﻿namespace Aurora.Framework.Application;
+﻿namespace Aurora.Framework;
 
 public interface IIntegrationEvent
 {

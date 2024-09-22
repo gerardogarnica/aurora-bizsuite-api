@@ -1,12 +1,6 @@
-﻿namespace Aurora.Framework.Application.EventBus;
+﻿namespace Aurora.Framework.Application;
 
-public interface IIntegrationEventHandler<in TIntegrationEvent> : IIntegrationEventHandler
-    where TIntegrationEvent : IIntegrationEvent
+public interface IIntegrationEventHandler<T> where T : IIntegrationEvent
 {
-    Task Handle(TIntegrationEvent integrationEvent, CancellationToken cancellationToken = default);
-}
-
-public interface IIntegrationEventHandler
-{
-    Task Handle(IIntegrationEvent integrationEvent, CancellationToken cancellationToken = default);
+    Task Handle(T integrationEvent, CancellationToken cancellationToken = default);
 }
