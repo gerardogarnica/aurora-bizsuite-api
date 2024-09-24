@@ -154,6 +154,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
 
         _units.Add(itemUnit);
 
+        AddDomainEvent(new ItemUnitAddedDomainEvent(Id.Value, unit.Id.Value));
+
         return this;
     }
 
@@ -180,6 +182,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             availableForDispatch,
             useDecimals);
 
+        AddDomainEvent(new ItemUnitUpdatedDomainEvent(Id.Value, itemUnit.UnitId.Value));
+
         return this;
     }
 
@@ -200,6 +204,8 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             return Result.Fail<Item>(ItemErrors.ItemUnitIsUnableToRemove);
 
         _units.Remove(itemUnit);
+
+        AddDomainEvent(new ItemUnitRemovedDomainEvent(Id.Value, itemUnit.UnitId.Value));
 
         return this;
     }
