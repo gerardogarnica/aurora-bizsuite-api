@@ -56,6 +56,8 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
         Name = name.Trim();
         Notes = notes?.Trim();
 
+        AddDomainEvent(new CategoryUpdatedDomainEvent(Id.Value));
+
         return this;
     }
 
@@ -65,6 +67,8 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
             return Result.Fail<Category>(CategoryErrors.CategoryIsAlreadyLocked);
 
         IsLocked = true;
+
+        AddDomainEvent(new CategoryLockedDomainEvent(Id.Value));
 
         return this;
     }
@@ -89,6 +93,8 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
         };
 
         _childs.Add(category);
+
+        category.AddDomainEvent(new CategoryCreatedDomainEvent(category.Id.Value));
 
         return this;
     }
