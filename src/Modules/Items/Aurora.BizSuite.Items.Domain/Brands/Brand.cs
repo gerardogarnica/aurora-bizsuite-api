@@ -1,7 +1,11 @@
-﻿namespace Aurora.BizSuite.Items.Domain.Brands;
+﻿using Aurora.BizSuite.Items.Domain.Items;
 
-public sealed class Brand : AggregateRoot<BrandId>, IAuditableEntity
+namespace Aurora.BizSuite.Items.Domain.Brands;
+
+public sealed class Brand : AggregateRoot<BrandId>, IAuditableEntity, ISoftDeletable
 {
+    private readonly List<Item> _items = [];
+
     public string Name { get; private set; }
     public string? LogoUri { get; private set; }
     public string? Notes { get; private set; }
@@ -9,6 +13,10 @@ public sealed class Brand : AggregateRoot<BrandId>, IAuditableEntity
     public DateTime CreatedAt { get; init; }
     public string? UpdatedBy { get; init; }
     public DateTime? UpdatedAt { get; init; }
+    public bool IsDeleted { get; init; }
+    public string? DeletedBy { get; init; }
+    public DateTime? DeletedAt { get; init; }
+    public IReadOnlyCollection<Item> Items => _items.AsReadOnly();
 
     private Brand() : base(new BrandId(Guid.NewGuid()))
     {

@@ -30,5 +30,15 @@ internal class BrandConfiguration : IEntityTypeConfiguration<Brand>
             .HasMaxLength(1000);
 
         builder.AddAuditableProperties();
+        builder.AddSoftDeletableProperties();
+
+        // Relationships
+        builder
+            .HasMany(e => e.Items)
+            .WithOne(e => e.Brand)
+            .HasForeignKey(e => e.BrandId)
+            .HasPrincipalKey(e => e.Id)
+            .HasConstraintName("FK_Item_Brand")
+            .IsRequired();
     }
 }

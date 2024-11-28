@@ -6,6 +6,10 @@ public static class BrandErrors
         "Brands.NotFound",
         $"The brand with identifier {id} was not found.");
 
+    public static BaseError IsDeleted(Guid id) => new(
+        "Brands.IsDeleted",
+        $"The brand with identifier {id} is inactive.");
+
     public static BaseError LogoUriIsTooLong => new(
         "Brands.LogoUriIsTooLong",
         "The maximum brand logo URI length is 1000 characters.");

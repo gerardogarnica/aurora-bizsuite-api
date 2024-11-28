@@ -4,7 +4,8 @@ public sealed record BrandModel(
     Guid Id,
     string Name,
     string? LogoUri,
-    string? Notes);
+    string? Notes,
+    List<BrandItemsByStatusModel> ItemsByStatus);
 
 internal static class BrandModelExtensions
 {
@@ -12,5 +13,6 @@ internal static class BrandModelExtensions
         brand.Id.Value,
         brand.Name,
         brand.LogoUri,
-        brand.Notes);
+        brand.Notes,
+        brand.ToBrandItemsByStatusModel());
 }
