@@ -23,6 +23,11 @@ public abstract class BaseRepository<TEntity, TId>(DbContext context)
         _context.Set<TEntity>().Update(entity);
     }
 
+    public void Delete(TEntity entity)
+    {
+        _context.Set<TEntity>().Remove(entity);
+    }
+
     protected async Task<PagedResult<T>> ToPagedResultAsync<T>(
         IQueryable<T> query,
         PagedViewRequest viewRequest)
