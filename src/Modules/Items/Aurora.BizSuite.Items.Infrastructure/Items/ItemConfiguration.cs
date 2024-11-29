@@ -83,14 +83,6 @@ internal class ItemConfiguration : IEntityTypeConfiguration<Item>
             .HasOne(e => e.Category)
             .WithMany()
             .HasForeignKey(e => e.CategoryId)
-            .HasConstraintName("FK_Item_Category")
-            .IsRequired();
-
-        builder
-            .HasOne(e => e.Brand)
-            .WithMany()
-            .HasForeignKey(e => e.BrandId)
-            .HasConstraintName("FK_Item_Brand")
             .IsRequired();
     }
 }

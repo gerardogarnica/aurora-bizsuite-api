@@ -39,12 +39,15 @@ internal class ItemUnitConfiguration : IEntityTypeConfiguration<ItemUnit>
             .HasIndex(i => i.ItemId)
             .HasDatabaseName("IX_ItemUnit_ItemId");
 
+        builder
+            .HasIndex(i => i.UnitId)
+            .HasDatabaseName("IX_ItemUnit_UnitId");
+
         // Foreign keys
         builder
             .HasOne<Item>()
             .WithMany(n => n.Units)
             .HasForeignKey(f => f.ItemId)
-            .IsRequired()
-            .HasConstraintName("FK_ItemUnit_Item");
+            .IsRequired();
     }
 }

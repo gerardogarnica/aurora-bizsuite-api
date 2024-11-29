@@ -9,6 +9,7 @@ public sealed class ItemsDbContext(
     public DbSet<Brand> Brands { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Item> Items { get; set; } = null!;
+    public DbSet<ItemCategory> ItemCategories { get; set; } = null!;
     public DbSet<ItemDescription> ItemDescriptions { get; set; } = null!;
     public DbSet<ItemResource> ItemResources { get; set; } = null!;
     public DbSet<ItemUnit> ItemUnits { get; set; } = null!;

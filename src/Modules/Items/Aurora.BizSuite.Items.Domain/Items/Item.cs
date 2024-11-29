@@ -9,6 +9,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     const int maxNumberOfUnits = 9;
     const int maxNumberOfRelatedItems = 9;
 
+    private List<ItemCategory> _categories = [];
     private readonly List<ItemDescription> _descriptions = [];
     private readonly List<ItemResource> _resources = [];
     private readonly List<ItemUnit> _units = [];
@@ -30,6 +31,7 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
     public DateTime? UpdatedAt { get; init; }
     public Category Category { get; init; } = null!;
     public Brand Brand { get; init; } = null!;
+    public IReadOnlyCollection<ItemCategory> Categories => _categories.AsReadOnly();
     public IReadOnlyCollection<ItemDescription> Descriptions => _descriptions.AsReadOnly();
     public IReadOnlyCollection<ItemResource> Resources => _resources.AsReadOnly();
     public IReadOnlyCollection<ItemUnit> Units => _units.AsReadOnly();
@@ -68,6 +70,12 @@ public sealed class Item : AggregateRoot<ItemId>, IAuditableEntity
             Status = ItemStatus.Draft,
             Tags = string.Join(";", tags)
         };
+
+        foreach (var parent in category.GetParentPaths())
+        {
+            item._categories.Add(ItemCategory.Create(item.Id, new CategoryId(parent.CategoryId)));
+        }
+        item._categories.Add(ItemCategory.Create(item.Id, category.Id));
 
         item.AddDomainEvent(new ItemCreatedDomainEvent(item.Id.Value));
 

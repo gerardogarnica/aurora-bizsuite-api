@@ -35,7 +35,6 @@ internal class ItemDescriptionConfiguration : IEntityTypeConfiguration<ItemDescr
             .HasOne<Item>()
             .WithMany(n => n.Descriptions)
             .HasForeignKey(f => f.ItemId)
-            .IsRequired()
-            .HasConstraintName("FK_ItemDescription_Item");
+            .IsRequired();
     }
 }

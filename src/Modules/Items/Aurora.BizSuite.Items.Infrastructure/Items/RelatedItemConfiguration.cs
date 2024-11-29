@@ -34,7 +34,6 @@ internal class RelatedItemConfiguration : IEntityTypeConfiguration<RelatedItem>
             .HasOne<Item>()
             .WithMany(n => n.RelatedItems)
             .HasForeignKey(f => f.ItemId)
-            .IsRequired()
-            .HasConstraintName("FK_RelatedItem_Item");
+            .IsRequired();
     }
 }

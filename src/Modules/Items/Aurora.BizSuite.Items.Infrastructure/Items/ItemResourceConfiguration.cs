@@ -32,7 +32,6 @@ internal class ItemResourceConfiguration : IEntityTypeConfiguration<ItemResource
             .HasOne<Item>()
             .WithMany(n => n.Resources)
             .HasForeignKey(f => f.ItemId)
-            .IsRequired()
-            .HasConstraintName("FK_ItemResource_Item");
+            .IsRequired();
     }
 }
