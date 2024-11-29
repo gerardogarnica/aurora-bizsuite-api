@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Text.Json;
 
 namespace Aurora.BizSuite.Items.Domain.Categories;
 
@@ -14,8 +14,8 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
     public CategoryId? ParentId { get; private set; }
     public int Level { get; private set; }
     public string? Notes { get; private set; }
+    public string ParentPath { get; private set; }
     public bool IsLocked { get; private set; }
-    [NotMapped]
     public bool IsLeaf => Level == maxNumberOfLevels;
     public string? CreatedBy { get; init; }
     public DateTime CreatedAt { get; init; }
@@ -28,6 +28,7 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
         Name = string.Empty;
         Code = string.Empty;
         ParentId = null;
+        ParentPath = string.Empty;
     }
 
     public static Category Create(
@@ -83,13 +84,17 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
         if (Level >= maxNumberOfLevels)
             return Result.Fail<Category>(CategoryErrors.MaxNumberOfLevelsReached);
 
+        List<ParentPathModel> parentPathList = [.. GetParentPaths()];
+        parentPathList.Add(new ParentPathModel(Id.Value, Code, Name));
+
         var category = new Category
         {
             Name = name.Trim(),
             Code = $"{Code}{(_childs.Count + 1).ToString().PadLeft(codeDigitsPerLevel, '0')}",
             ParentId = Id,
             Level = Level + 1,
-            Notes = notes?.Trim()
+            Notes = notes?.Trim(),
+            ParentPath = JsonSerializer.Serialize(parentPathList)
         };
 
         _childs.Add(category);
@@ -98,4 +103,15 @@ public sealed class Category : AggregateRoot<CategoryId>, IAuditableEntity
 
         return this;
     }
+
+    internal IList<ParentPathModel> GetParentPaths()
+    {
+        List<ParentPathModel> parentPathList = [];
+        if (!string.IsNullOrWhiteSpace(ParentPath))
+            parentPathList = JsonSerializer.Deserialize<List<ParentPathModel>>(ParentPath)!;
+
+        return parentPathList;
+    }
 }
+
+internal sealed record ParentPathModel(Guid CategoryId, string Code, string Name);

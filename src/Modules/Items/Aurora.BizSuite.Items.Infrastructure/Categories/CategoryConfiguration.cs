@@ -37,7 +37,14 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .Property(p => p.Notes)
             .HasMaxLength(1000);
 
+        builder
+            .Property(p => p.ParentPath)
+            .IsRequired()
+            .HasMaxLength(1000);
+
         builder.Property(p => p.IsLocked).IsRequired();
+
+        builder.Ignore(p => p.IsLeaf);
 
         builder.AddAuditableProperties();
 
@@ -51,7 +58,6 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasOne<Category>()
             .WithMany(n => n.Childs)
             .HasForeignKey(f => f.ParentId)
-            .IsRequired(false)
-            .HasConstraintName("FK_Category_Parent");
+            .IsRequired(false);
     }
 }
