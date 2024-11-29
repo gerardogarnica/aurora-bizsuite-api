@@ -34,6 +34,11 @@ internal sealed class CreateItemCommandHandler(
             return Result.Fail<Guid>(BrandErrors.NotFound(request.BrandId));
         }
 
+        if (brand.IsDeleted)
+        {
+            return Result.Fail<Guid>(BrandErrors.IsDeleted(request.BrandId));
+        }
+
         // Create item
         var item = Item.Create(
             request.Code,

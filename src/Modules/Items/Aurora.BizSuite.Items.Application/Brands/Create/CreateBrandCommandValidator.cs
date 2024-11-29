@@ -23,6 +23,10 @@ internal sealed class CreateBrandCommandValidator : AbstractValidator<CreateBran
 
     private async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken = default!)
     {
-        return await _brandRepository.GetByNameAsync(name) is null;
+        var brand = await _brandRepository.GetByNameAsync(name);
+
+        if (brand is null) return true;
+
+        return brand.IsDeleted;
     }
 }
