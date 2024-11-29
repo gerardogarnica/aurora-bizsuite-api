@@ -7,4 +7,5 @@ public interface IBrandRepository : IRepository<Brand>
     Task<PagedResult<Brand>> GetPagedAsync(PagedViewRequest paged, string? searchTerms);
     Task InsertAsync(Brand brand);
     void Update(Brand brand);
+    void Delete(Brand brand);
 }

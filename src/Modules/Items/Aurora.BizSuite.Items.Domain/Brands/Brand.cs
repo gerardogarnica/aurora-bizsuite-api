@@ -43,9 +43,24 @@ public sealed class Brand : AggregateRoot<BrandId>, IAuditableEntity, ISoftDelet
         string? logoUri,
         string? notes)
     {
+        if (IsDeleted)
+        {
+            return Result.Fail<Brand>(BrandErrors.IsDeleted(Id.Value));
+        }
+
         Name = name.Trim();
         LogoUri = logoUri?.Trim();
         Notes = notes?.Trim();
+
+        return this;
+    }
+
+    public Result<Brand> Delete()
+    {
+        if (IsDeleted)
+        {
+            return Result.Fail<Brand>(BrandErrors.IsDeleted(Id.Value));
+        }
 
         return this;
     }
