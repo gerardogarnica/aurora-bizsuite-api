@@ -11,7 +11,8 @@ internal sealed class GetBrandListQueryHandler(
         // Get paged brands
         var pagedBrands = await brandRepository.GetPagedAsync(
             request.PagedView,
-            request.SearchTerms);
+            request.SearchTerms,
+            request.ShowDeleted);
 
         // Return paged result
         return Result.Ok(new PagedResult<BrandModel>(

@@ -2,5 +2,6 @@
 
 public sealed record GetBrandListQuery(
     PagedViewRequest PagedView,
-    string? SearchTerms)
+    string? SearchTerms,
+    bool ShowDeleted)
     : IQuery<PagedResult<BrandModel>>;

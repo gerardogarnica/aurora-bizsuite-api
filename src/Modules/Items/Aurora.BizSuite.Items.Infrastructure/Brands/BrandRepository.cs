@@ -21,7 +21,7 @@ internal sealed class BrandRepository(
         .FirstOrDefaultAsync();
 
     public async Task<PagedResult<Brand>> GetPagedAsync(
-        PagedViewRequest paged, string? searchTerms)
+        PagedViewRequest paged, string? searchTerms, bool showDeleted)
     {
         var query = dbContext
             .Brands
@@ -32,6 +32,11 @@ internal sealed class BrandRepository(
         if (!string.IsNullOrWhiteSpace(searchTerms) && searchTerms.Length >= 3)
         {
             query = query.Where(x => x.Name.Contains(searchTerms));
+        }
+
+        if (!showDeleted)
+        {
+            query = query.Where(x => !x.IsDeleted);
         }
 
         return await ToPagedResultAsync(query.OrderBy(x => x.Name), paged);

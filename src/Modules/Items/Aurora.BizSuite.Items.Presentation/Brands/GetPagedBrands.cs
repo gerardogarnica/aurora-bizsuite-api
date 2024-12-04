@@ -13,11 +13,13 @@ internal sealed class GetPagedBrands : IBaseEndpoint
                 [FromQuery] int page,
                 [FromQuery] int size,
                 [FromQuery] string? searchTerms,
+                [FromQuery] bool showDeleted,
                 ISender sender) =>
             {
                 var query = new GetBrandListQuery(
                     new PagedViewRequest(page, size),
-                searchTerms);
+                    searchTerms,
+                    showDeleted);
 
                 Result<PagedResult<BrandModel>> result = await sender.Send(query);
 
