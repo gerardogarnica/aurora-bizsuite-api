@@ -1,0 +1,15 @@
+services:
+  Aurora.BizSuite.Api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - "ConnectionStrings:CompaniesDataConnection=Data Source=192.168.3.9;Database=AuroraBizSuite;User ID=sa;Password=admin123;Encrypt=False"
+      - "ConnectionStrings:InventoryDataConnection=Data Source=192.168.3.9;Database=AuroraBizSuite;User ID=sa;Password=admin123;Encrypt=False"
+      - "ConnectionStrings:ItemsDataConnection=Data Source=192.168.3.9;Database=AuroraBizSuite;User ID=sa;Password=admin123;Encrypt=False"
+    ports:
+      - "5001:8080"
+      - "50001:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

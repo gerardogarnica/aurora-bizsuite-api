@@ -1,0 +1,13 @@
+services:
+  Aurora.BizSuite.Api:
+    image: ${DOCKER_REGISTRY-}aurora/bizsuite-api:1.0
+    build:
+      context: .
+      dockerfile: Apis/Aurora.BizSuite.Api/Dockerfile
+    container_name: Aurora.BizSuite.Api
+    networks:
+      - aurora-bizsuite
+
+networks:
+  aurora-bizsuite:
+    name: aurora-bizsuite
